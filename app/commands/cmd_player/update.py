@@ -1,8 +1,2 @@
-
-
-
-
-
-
-def update():
-    pass
+def update(context):
+    print("ayaya")

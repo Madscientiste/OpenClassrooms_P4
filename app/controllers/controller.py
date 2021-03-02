@@ -6,12 +6,7 @@ from app.commands import PlayerCommand, TournamentCommand, HelpCommand
 class Controller:
     def __init__(self) -> None:
         self.is_running = True
-
         self.commands = [PlayerCommand, TournamentCommand, HelpCommand]
-        self.view = " "
-
-    def display(self):
-        self.view
 
     def run(self):
         while self.is_running:
@@ -26,7 +21,7 @@ class Controller:
                 for Command in self.commands:
                     if cmd_name == Command.name:
                         command = Command()
-                        command.execute(args)
+                        command.execute(args=args, cmd_context=self.commands)
 
             else:
                 print("no input")

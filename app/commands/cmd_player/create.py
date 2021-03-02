@@ -3,5 +3,6 @@
 
 
 
-def create():
-    pass
+def create(context):
+    """Create a new Player.""" 
+    print("create")
