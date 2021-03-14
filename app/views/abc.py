@@ -3,12 +3,14 @@ from typing import final
 
 
 class BaseView:
-    SEPARATOR_LENGTH = 50
-    SEPARATOR_TOP = "-"
+    SCREEN_WIDTH = os.get_terminal_size().columns
+    
+    SEPARATOR_LENGTH = SCREEN_WIDTH
+    SEPARATOR_TOP = "="
     SEPARATOR_BOT = "="
-
+    
     title = " {} "
-    body = ""
+    body = []
     footer = " {} "
 
     def clear_screen(self):
@@ -21,7 +23,7 @@ class BaseView:
 
     def add_body(self, body):
         """Set the Body."""
-        self.body = body
+        self.body.append(body)
 
     def set_footer(self, footer):
         """Set the Footer."""
@@ -34,7 +36,7 @@ class BaseView:
         print(self.title.center(self.SEPARATOR_LENGTH, self.SEPARATOR_TOP))
 
         print()
-        print(self.body)
+        print("\n".join(self.body))
         print()
 
         print(self.footer.center(self.SEPARATOR_LENGTH, self.SEPARATOR_BOT))

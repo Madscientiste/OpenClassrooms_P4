@@ -6,10 +6,14 @@ from .abc import BaseView
 class PlayerView(BaseView):
     def render_multiple_players(self, player_list, title):
         """Renders Multiple Players into a Table."""
+        self.body = []  # Reset the body to avoid duplicates
         text_table = Texttable()
 
         if player_list:
-            headers = ["id", *[header for header in player_list[0].keys()]]
+            player_list = player_list.copy()
+            header_keys = player_list[0].keys()
+            headers = [header for header in header_keys]
+            headers = list(set(["id", *headers]))
 
             player_ids = [id.doc_id for id in player_list]
             players = []
@@ -23,20 +27,19 @@ class PlayerView(BaseView):
             text_table.add_rows([headers, *players])
 
             table = text_table.draw()
-            table_width = len(table.split("\n")[0])
 
-            self.SEPARATOR_LENGTH = table_width
             self.set_title(title)
             self.add_body(table)
         else:
             self.set_title("Error")
-            self.add_body("Empty List")
+            self.add_body("Not Found")
 
-        self.set_footer("END")
+        self.set_footer(" Waiting Input ")
         self.render_view()
 
     def render_single_player(self, player, title):
         """Renders a single Player into a Table."""
+        self.body = []  # Reset the body to avoid duplicates
         text_table = Texttable()
 
         if player:
@@ -50,7 +53,6 @@ class PlayerView(BaseView):
             table = text_table.draw()
             table_width = len(table.split("\n")[0])
 
-            self.SEPARATOR_LENGTH = table_width
             self.set_title(title)
             self.add_body(table)
 
@@ -58,7 +60,7 @@ class PlayerView(BaseView):
             print(table)
         else:
             self.set_title("Error")
-            self.add_body("Empty List")
+            self.add_body("Not Found")
 
-        self.set_footer("END")
+        self.set_footer(" Waiting Input ")
         self.render_view()

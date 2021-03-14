@@ -2,5 +2,5 @@
 
 
 
-def delete():
+def delete(args, context):
     pass

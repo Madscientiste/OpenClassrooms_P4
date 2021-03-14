@@ -1,4 +1,8 @@
-from .cmd_player import create, update, delete, find
+from .cmd_player import create, update, delete, findby
+
+from app.models import Player, Tournament
+from app.decorators import sanitize_params
+from app.views import PlayerView
 
 from .abc import BaseCommand
 
@@ -12,17 +16,17 @@ class PlayerCommand(BaseCommand):
     sub_commands["create"] = create
     sub_commands["update"] = update
     sub_commands["delete"] = delete
-    sub_commands["find"] = find
+    sub_commands["findby"] = findby
 
-    def execute(self, args):
-        action = args.pop(0) if len(args) else None
+    def __init__(self, cmd_context) -> None:
+        super().__init__(current_cmd=self.name)
 
-        if not action:
-            return print("no action specified")
+        self.cmd_context = cmd_context
 
-        # Prepare the context so it cas passe into its childrens
-        context = {}
-        context["player_model"] = self.player_model
-        context["player_view"] = self.player_view
+        self.context = BaseCommand.context.copy()
+        self.context["player_view"] = PlayerView()
+        self.context["player_model"] = Player
 
-        self.execute_sub(action, context)
+    @sanitize_params
+    def execute(self, action, args):
+        self.execute_sub(action, context=self.context, args=args)

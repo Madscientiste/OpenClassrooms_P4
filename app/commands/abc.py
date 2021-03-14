@@ -1,24 +1,18 @@
-from app.models import Player, Tournament
-from app.views import PlayerView
+from app.views import ErrorView
 
 
 class BaseCommand:
     name = None
     usage = None
     description = None
-
+    is_hidden = False
+    
     sub_commands = {}
+    context = {}
+    
+    def __init__(self, current_cmd) -> None:
+        self.context["error_view"] = ErrorView(current_cmd)
 
-    player_model = Player
-    tournament_model = Tournament
-
-    player_view = PlayerView()
-
-    def __init__(self) -> None:
-        pass
-
-    def sanitize_action(self, args) -> None:
-        pass
 
     def execute(self, args):
         pass

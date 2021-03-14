@@ -1,4 +1,4 @@
 from .create import create
 from .delete import delete
-from .find import find
+from .findby import findby
 from .update import update

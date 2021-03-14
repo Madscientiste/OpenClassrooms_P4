@@ -4,5 +4,5 @@
 
 
 
-def update():
+def update(args, context):
     pass
