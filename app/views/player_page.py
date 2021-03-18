@@ -6,8 +6,8 @@ from .abc import BaseView
 class PlayerView(BaseView):
     def render_multiple_players(self, player_list, title):
         """Renders Multiple Players into a Table."""
-        self.body = []  # Reset the body to avoid duplicates
         text_table = Texttable()
+        self.body = []  # Reset the body to avoid duplicates
 
         if player_list:
             player_list = player_list.copy()

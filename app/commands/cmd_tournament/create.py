@@ -9,7 +9,6 @@ def create(args, context):
 
     error_view = context["error_view"]
 
-    params = {}
     fields = [
         {"name": "name", "value": None, "special": None},
         {"name": "location", "value": None, "special": None},
@@ -20,30 +19,33 @@ def create(args, context):
         {"name": "description", "value": None, "special": None},
     ]
 
-    for field in fields:
-        tournament_view.render_questions(fields, title="Creating Tournament")
+    for f_index, field in enumerate(fields):
+        tournament_view.render_questions(fields, "BBBBBB")
 
         f_name = field["name"]
         f_special = field["special"]
 
         if f_special:
-            value = f_special()
+            value = f_special(context, fields)
         else:
-            value = input(f"-> {field}: ")
+            value = input(f"-> {f_name}: ")
 
         if not value:
-            error_view.generic_error(message=f"Missing value for : {field}")
+            err_message = f"Missing value for : {field}\n value has been randomized."
+            error_view.generic_error(message=err_message)
             continue
 
         if value == "*":
-            value = generate_fake(field)
+            value = generate_fake(f_name)
 
-        params[f_name] = value
+        fields[f_index]["value"] = value
 
-    tournament_view.render_questions(params, title="Creating Tournament")
+    # params = {field["name"]: field["value"] for field in fields}
+    tournament_view.render_created_tournament(fields, "AAAAAAAA")
 
 
-def select_players(context):
+def select_players(context, fields):
+    error_view = context["error_view"]
     player_view = context["player_view"]
     player_model = context["player_model"]
     tournament_view = context["tournament_view"]
@@ -53,38 +55,35 @@ def select_players(context):
     id_list = lambda: [p.doc_id for p in selected_players]
     players = player_model.find_many(None, None)
 
-    tournament_view.render_player_selection(players, "Registred Player(s)")
+    tournament_view.render_player_selection(players, fields, "Available Player(s)")
 
+    while len(selected_players) != 8:
+        player_list = [p for p in players if p.doc_id not in id_list()]
+        tournament_view.render_player_selection(player_list, fields, "Available Player(s)")
 
-    # tournament = tournament_model(**params)
-    # saved_tournament = tournament.save()
+        print("Selected players:", [p["first_name"] for p in selected_players])
 
-    # tournament_view.render_created_tournament(saved_tournament, title="Created Tournament")
+        value = input("Please select a player by its ID: ")
 
-    # def apply_players(value=8):
-    #     while len(selected_players) != int(value):
-    #         player_list = [p for p in players if p.doc_id not in id_list()]
-    #         player_view.render_multiple_players(player_list, title="Available Players")
-    #         print("Selected players:", [p["first_name"] for p in selected_players])
-    #         selected = input("Please select a player by its ID: ")
-    #         if not selected.isdigit():
-    #             error_view.generic_error("Only Numbers are allowed")
-    #             continue
-    #         player = player_model.find_one(id=int(selected))
-    #         if player.doc_id in id_list():
-    #             error_view.generic_error("Player already added to the list")
-    #             continue
-    #         selected_players.append(player)
-    #         player_list = [p for p in players if p.doc_id not in id_list()]
-    #         player_view.render_multiple_players(player_list, title="Available Players")
-    #     player_view.render_multiple_players(selected_players, title="Selected Players")
+        if value == "*":
+            value = str(random.choice([idx.doc_id for idx in player_list]))
 
-    # for question in params.keys():
-    #     apply_question = params[question]
-    #     value = input(f"-> {question}: ")
-    #     value = generate_fake(question) if value == "*" else apply_question(value)
-    #     params[question] = value
-    # print(params)
+        if not value.isdigit():
+            error_view.generic_error("Only Numbers are allowed")
+            continue
+
+        player = player_model.find_one(id=int(value))
+
+        if player.doc_id in id_list():
+            error_view.generic_error("Player already added to the list")
+            continue
+
+        selected_players.append(player)
+
+    tournament_view.render_player_selection(selected_players, fields, "Selected Players")
+    input("Press enter to continue...")
+
+    return [player.doc_id for player in selected_players]
 
 
 def generate_fake(field):
