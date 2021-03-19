@@ -1,12 +1,14 @@
-from .cmd_player import create, update, delete, findby
-
-from app.models import Player, Tournament
-from app.decorators import sanitize_params
-from app.views import PlayerView
+from .cmd_player import create, delete, findby
 
 from .abc import BaseCommand
 
+from app.models import Player, Tournament
+from app.utilities.decorators import sanitize_params
+from app.utilities.handler import CommandHandler
+from app.views import PlayerView
 
+
+@CommandHandler.register_command
 class PlayerCommand(BaseCommand):
     name = "player"
     usage = "player <sub_command>"
@@ -14,7 +16,6 @@ class PlayerCommand(BaseCommand):
 
     sub_commands = {}
     sub_commands["create"] = create
-    sub_commands["update"] = update
     sub_commands["delete"] = delete
     sub_commands["findby"] = findby
 

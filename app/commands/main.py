@@ -1,9 +1,12 @@
 from app.views import MainView
 
 from .abc import BaseCommand
-from app.decorators import sanitize_params
+
+from app.utilities.decorators import sanitize_params
+from app.utilities.handler import CommandHandler
 
 
+@CommandHandler.register_command
 class MainCommand(BaseCommand):
     name = "main"
     usage = "main"

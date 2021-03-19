@@ -1,4 +1,4 @@
-from app.views import ErrorView
+from app.views import ErrorView, MainView
 
 
 class BaseCommand:
@@ -6,13 +6,13 @@ class BaseCommand:
     usage = None
     description = None
     is_hidden = False
-    
+
     sub_commands = {}
     context = {}
-    
-    def __init__(self, current_cmd) -> None:
-        self.context["error_view"] = ErrorView(current_cmd)
 
+    def __init__(self, current_cmd) -> None:
+        self.context["error_view"] = ErrorView()
+        self.context["main_view"] = MainView(current_cmd)
 
     def execute(self, args):
         pass

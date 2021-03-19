@@ -1,20 +1,19 @@
-import os
-
-from app.commands import PlayerCommand, TournamentCommand, HelpCommand, MainCommand, TestCommand
 from app.views import MainView
-
-from .handler import Handle
+from app.utilities.handler import CommandHandler
 
 
 class Controller:
     def __init__(self) -> None:
         self.is_running = True
-        self.main_view = MainView()
-        self.commands = [PlayerCommand, TournamentCommand, HelpCommand, MainCommand, TestCommand]
+        self.main_view = MainView(None)
+        self.command_handler = CommandHandler(blacklist=["__init__", "abc"])
 
-    @Handle.exceptions
+    # @Handle.exceptions
     def run(self):
-        self.main_view.render_main_page(commands=self.commands)
+        self.command_handler.import_commands("app.commands")
+        commands = self.command_handler.COMMANDS
+
+        self.main_view.render_main_page(commands)
 
         while self.is_running:
             input_content = input("-> : ")
@@ -23,9 +22,9 @@ class Controller:
             cmd_name = args.pop(0)
 
             if cmd_name:
-                for Command in self.commands:
+                for Command in commands:
                     if cmd_name == Command.name:
-                        command = Command(cmd_context=self.commands)
+                        command = Command(cmd_context=commands)
                         command.execute(args)
 
             else:

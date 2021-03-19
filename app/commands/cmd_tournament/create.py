@@ -4,6 +4,7 @@ from faker import Faker
 
 
 def create(args, context):
+    """Create a new Tournament."""
     tournament_view = context["tournament_view"]
     tournament_model = context["tournament_model"]
 

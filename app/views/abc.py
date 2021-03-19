@@ -4,14 +4,14 @@ from typing import final
 
 class BaseView:
     SCREEN_WIDTH = os.get_terminal_size().columns
-    
+
     SEPARATOR_LENGTH = SCREEN_WIDTH
     SEPARATOR_TOP = "="
     SEPARATOR_BOT = "="
-    
+
     title = " {} "
     body = []
-    footer = " {} "
+    footer = " Waiting Input "
 
     def clear_screen(self):
         """Clear the screen."""
@@ -27,7 +27,15 @@ class BaseView:
 
     def set_footer(self, footer):
         """Set the Footer."""
-        self.footer = self.footer.format(footer)
+        self.footer = f" {footer} "
+
+    def center_table(self, table):
+        """Center a table in the middle of the screen."""
+        temp = table.split("\n")
+        temp = [v.center(self.SCREEN_WIDTH, " ") for v in temp]
+        table = "\n".join(temp)
+
+        return table
 
     def render_view(self):
         """Render The view."""

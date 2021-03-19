@@ -1,7 +1,7 @@
 class Handle:
     def __init__(self) -> None:
         pass
-    
+
     @classmethod
     def exceptions(cls, func):
         def wrapper(*args, **kwargs):

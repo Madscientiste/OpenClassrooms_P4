@@ -34,7 +34,6 @@ class PlayerView(BaseView):
             self.set_title("Error")
             self.add_body("Not Found")
 
-        self.set_footer(" Waiting Input ")
         self.render_view()
 
     def render_single_player(self, player, title):

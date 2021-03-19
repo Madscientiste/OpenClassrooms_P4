@@ -59,7 +59,6 @@ def generate_fake(field):
 
     params = {}
     random_rank = random.randint(1, 100)
-    random_sexe = random.randint(1, 100)
 
     params["first_name"] = fake.first_name()
     params["last_name"] = fake.last_name()

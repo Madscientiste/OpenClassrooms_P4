@@ -2,10 +2,12 @@ from .cmd_tournament import create, update, delete
 from .abc import BaseCommand
 
 from app.models import Tournament, Player
-from app.decorators import sanitize_params
+from app.utilities.decorators import sanitize_params
 from app.views import PlayerView, TournamentView
+from app.utilities.handler import CommandHandler
 
 
+@CommandHandler.register_command
 class TournamentCommand(BaseCommand):
     name = "tournament"
     usage = "tournament <sub_command>"
