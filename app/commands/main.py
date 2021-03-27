@@ -16,10 +16,10 @@ class MainCommand(BaseCommand):
     def __init__(self, cmd_context) -> None:
         super().__init__(current_cmd=self.name)
 
-        self.cmd_context = cmd_context
+        self.cmd_context = cmd_context.values()
 
         self.context = BaseCommand.context.copy()
-        self.context["main_view"] = MainView()
+        self.context["main_view"] = MainView(None)
 
     def execute(self, args):
         main_view: MainView = self.context["main_view"]

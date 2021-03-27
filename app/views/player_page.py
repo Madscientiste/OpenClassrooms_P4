@@ -7,13 +7,15 @@ class PlayerView(BaseView):
     def render_multiple_players(self, player_list, title):
         """Renders Multiple Players into a Table."""
         text_table = Texttable()
+
         self.body = []  # Reset the body to avoid duplicates
+        self.set_title(title)
 
         if player_list:
             player_list = player_list.copy()
             header_keys = player_list[0].keys()
             headers = [header for header in header_keys]
-            headers = list(set(["id", *headers]))
+            headers = list(dict.fromkeys(["id", *headers]))
 
             player_ids = [id.doc_id for id in player_list]
             players = []
@@ -27,8 +29,8 @@ class PlayerView(BaseView):
             text_table.add_rows([headers, *players])
 
             table = text_table.draw()
+            table = self.center_table(table)
 
-            self.set_title(title)
             self.add_body(table)
         else:
             self.set_title("Error")
@@ -38,28 +40,21 @@ class PlayerView(BaseView):
 
     def render_single_player(self, player, title):
         """Renders a single Player into a Table."""
-        self.body = []  # Reset the body to avoid duplicates
         text_table = Texttable()
 
-        if player:
-            headers = ["id", *[header for header in player.keys()]]
+        self.body = []  # Reset the body to avoid duplicates
+        self.set_title(title)
 
-            player["id"] = player.doc_id
-            player = [player[key] for key in headers]
+        headers = [header for header in player.keys()]
+        headers = list(dict.fromkeys(["id", *headers]))
 
-            text_table.add_rows([headers, player])
+        player["id"] = player.doc_id
+        player = [player[key] for key in headers]
 
-            table = text_table.draw()
-            table_width = len(table.split("\n")[0])
+        text_table.add_rows([headers, player])
 
-            self.set_title(title)
-            self.add_body(table)
+        table = text_table.draw()
+        table = self.center_table(table)
 
-            print(title.center(table_width, "-"))
-            print(table)
-        else:
-            self.set_title("Error")
-            self.add_body("Not Found")
-
-        self.set_footer(" Waiting Input ")
+        self.add_body(table)
         self.render_view()

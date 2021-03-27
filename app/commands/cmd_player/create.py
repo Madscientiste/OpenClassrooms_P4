@@ -5,34 +5,56 @@ from faker import Faker
 
 def create(args, context):
     """Create a new Player."""
-    questions = ["first_name", "last_name", "birthday", "sexe", "rank"]
+    fields = [
+        {"name": "first_name", "value": None, "special": None},
+        {"name": "last_name", "value": None, "special": None},
+        {"name": "birthday", "value": None, "special": None},
+        {"name": "sexe", "value": None, "special": None},
+        {"name": "rank", "value": None, "special": None},
+    ]
+
     action = args.pop(0) if len(args) else None
 
     if action == "*":
-        create_multiple_players(context, questions)
+        create_multiple_players(context, fields)
     else:
-        create_single_player(args, context, questions)
+        create_single_player(args, context, fields)
 
 
-def create_single_player(args, context, questions):
-    params = {}
-
+def create_single_player(args, context, fields):
     player_model = context["player_model"]
     player_view = context["player_view"]
+    error_view = context["error_view"]
 
-    for question in questions:
-        value = input(f"-> {question}: ")
-        value = generate_fake(question) if value == "*" else value
+    for f_index, field in enumerate(fields):
+        player_view.render_questions(fields, "Creating a Player")
 
-        params[question] = value
+        f_name = field["name"]
+        f_special = field["special"]
 
+        if f_special:
+            value = f_special(context, fields)
+        else:
+            value = input(f"-> {f_name}: ")
+
+        if not value:
+            err_message = f"Missing value for : {f_name}\nvalue has been randomized."
+            error_view.generic_error(message=err_message)
+            value = generate_fake(f_name)
+
+        if value == "*":
+            value = generate_fake(f_name)
+
+        fields[f_index]["value"] = value
+
+    params = {field["name"]: field["value"] for field in fields}
     new_player = player_model(**params)
     new_player = new_player.save()
 
-    player_view.render_single_player(new_player, title="Created Player")
+    player_view.render_single_player(new_player, "Created Player")
 
 
-def create_multiple_players(context, questions):
+def create_multiple_players(context, fields):
     player_list = []
 
     player_model = context["player_model"]
@@ -41,16 +63,18 @@ def create_multiple_players(context, questions):
     for i in range(8):
         params = {}
 
-        for question in questions:
-            value = generate_fake(question)
-            params[question] = value
+        for field in fields:
+            f_name = field["name"]
+
+            value = generate_fake(f_name)
+            params[f_name] = value
 
         new_player = player_model(**params)
         new_player = new_player.save()
 
         player_list.append(new_player)
 
-    player_view.render_multiple_players(player_list=player_list, title="Registred Players")
+    player_view.render_multiple_players(player_list, "Registred Players")
 
 
 def generate_fake(field):

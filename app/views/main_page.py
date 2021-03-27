@@ -9,10 +9,10 @@ class MainView(BaseView):
     def __init__(self, current_cmd) -> None:
         self.current_cmd = current_cmd
 
-    def __show_example(self):
+    def _show_example(self):
         self.add_body(" ")
-        self.add_body(f" Example ".center(self.SCREEN_WIDTH, "-"))
-        self.add_body(f" {self.current_cmd} <action> ".center(self.SCREEN_WIDTH, "-"))
+        self.add_body(self.center_item("Example"))
+        self.add_body(self.center_item(f"{self.current_cmd} <action>"))
 
     def render_main_page(self, commands):
         self.body = []
@@ -33,7 +33,7 @@ class MainView(BaseView):
                 self.add_body(f"---- Usage: {usage} ")
                 self.add_body(" ")
 
-        self.add_body("".center(self.SCREEN_WIDTH, "-"))
+        self.add_body(self.center_item("", no_space=True))
 
         self.add_body("")
         self.add_body("Ongoing Tournaments")
@@ -75,6 +75,6 @@ class MainView(BaseView):
         self.set_title("Available Actions")
         self.add_body(table)
 
-        self.__show_example()
+        self._show_example()
 
         self.render_view()

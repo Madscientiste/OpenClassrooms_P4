@@ -21,7 +21,7 @@ def create(args, context):
     ]
 
     for f_index, field in enumerate(fields):
-        tournament_view.render_questions(fields, "BBBBBB")
+        tournament_view.render_questions(fields, "Creating a Tournament")
 
         f_name = field["name"]
         f_special = field["special"]
@@ -32,9 +32,9 @@ def create(args, context):
             value = input(f"-> {f_name}: ")
 
         if not value:
-            err_message = f"Missing value for : {field}\n value has been randomized."
+            err_message = f"Missing value for : {f_name}\nvalue has been randomized."
             error_view.generic_error(message=err_message)
-            continue
+            value = generate_fake(f_name)
 
         if value == "*":
             value = generate_fake(f_name)
@@ -42,7 +42,7 @@ def create(args, context):
         fields[f_index]["value"] = value
 
     # params = {field["name"]: field["value"] for field in fields}
-    tournament_view.render_created_tournament(fields, "AAAAAAAA")
+    tournament_view.render_created_tournament(fields, "Created Tournament")
 
 
 def select_players(context, fields):

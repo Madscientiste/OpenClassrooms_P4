@@ -1,17 +1,19 @@
-from app.views import MainView
-from app.utilities.handler import CommandHandler
+from app.views import MainView, ErrorView
+from app.utilities.handler import CommandHandler, ExecptionHandler
 
 
 class Controller:
     def __init__(self) -> None:
         self.is_running = True
         self.main_view = MainView(None)
+        self.error_view = ErrorView()
+
         self.command_handler = CommandHandler(blacklist=["__init__", "abc"])
 
-    # @Handle.exceptions
+    @ExecptionHandler.keyboard_interrupt
     def run(self):
         self.command_handler.import_commands("app.commands")
-        commands = self.command_handler.COMMANDS
+        commands = self.command_handler.COMMANDS.values()
 
         self.main_view.render_main_page(commands)
 
@@ -21,11 +23,12 @@ class Controller:
 
             cmd_name = args.pop(0)
 
-            if cmd_name:
-                for Command in commands:
-                    if cmd_name == Command.name:
-                        command = Command(cmd_context=commands)
-                        command.execute(args)
+            context = {}
+            context["error_view"] = self.error_view
+            context["main_view"] = self.main_view
 
+            if cmd_name:
+                self.command_handler.execute(cmd_name, args, context)
             else:
-                print("no input")
+                self.error_view.generic_error(message="No input given", centered=True)
+                self.main_view.render_main_page(commands)
