@@ -4,10 +4,8 @@ from faker import Faker
 
 
 def create(args, context):
-    """Create a new Tournament."""
+    """Create a new tournament."""
     tournament_view = context["tournament_view"]
-    tournament_model = context["tournament_model"]
-
     error_view = context["error_view"]
 
     fields = [
@@ -47,7 +45,6 @@ def create(args, context):
 
 def select_players(context, fields):
     error_view = context["error_view"]
-    player_view = context["player_view"]
     player_model = context["player_model"]
     tournament_view = context["tournament_view"]
 
@@ -66,8 +63,21 @@ def select_players(context, fields):
 
         value = input("Please select a player by its ID: ")
 
-        if value == "*":
+        if value == "*":  # Generate random data regarding that field
             value = str(random.choice([idx.doc_id for idx in player_list]))
+
+        elif value == "-":  # Delete the last player
+            if not len(selected_players):
+                error_view.generic_error(f"Can't remove last player, list is empty")
+                continue
+
+            deleted = selected_players.pop()
+            error_view.generic_error(f"{deleted['first_name']} has been remouved from the list")
+            continue
+
+        if not value:
+            error_view.generic_error("No input given")
+            continue
 
         if not value.isdigit():
             error_view.generic_error("Only Numbers are allowed")
@@ -75,6 +85,10 @@ def select_players(context, fields):
 
         player = player_model.find_one(id=int(value))
 
+        if not player:
+            error_view.generic_error(f"Player with ID [{value}] doesn't exist")
+            continue
+        
         if player.doc_id in id_list():
             error_view.generic_error("Player already added to the list")
             continue

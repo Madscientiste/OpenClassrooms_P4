@@ -38,8 +38,7 @@ def create_single_player(args, context, fields):
             value = input(f"-> {f_name}: ")
 
         if not value:
-            err_message = f"Missing value for : {f_name}\nvalue has been randomized."
-            error_view.generic_error(message=err_message)
+            error_view.missing_value(f_name, True)
             value = generate_fake(f_name)
 
         if value == "*":

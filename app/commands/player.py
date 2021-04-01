@@ -25,6 +25,7 @@ class PlayerCommand(BaseCommand):
         self.cmd_context = cmd_context
 
         self.context = BaseCommand.context.copy()
+        self.context["sub_commands"] = self.sub_commands
         self.context["player_view"] = PlayerView()
         self.context["player_model"] = Player
 

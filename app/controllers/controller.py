@@ -18,7 +18,7 @@ class Controller:
         self.main_view.render_main_page(commands)
 
         while self.is_running:
-            input_content = input("-> : ")
+            input_content = input("-> : ").strip()
             args = input_content.split(" ")
 
             cmd_name = args.pop(0)

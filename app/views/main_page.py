@@ -48,8 +48,16 @@ class MainView(BaseView):
         self.add_body("------- players")
         self.add_body("------- time_control")
         self.add_body("------- description")
+        self.add_body("")
 
-        self.set_footer(" Waiting Input ")
+        self.add_body(self.center_item("", no_space=True))
+        self.add_body("")
+
+        self.add_body("To Exit the application do [CTRL + C] at anytime")
+
+        self.add_body("")
+        self.add_body(self.center_item("", no_space=True))
+
         self.render_view()
 
     def display_actions(self, actions):

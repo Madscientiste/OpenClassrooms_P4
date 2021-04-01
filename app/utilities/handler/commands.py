@@ -21,16 +21,16 @@ class CommandHandler:
 
         return commands
 
-    def reload(self, package):
-        module = sys.modules[package]
-        importlib.reload(module)
+    # def reload(self, package):
+    #     module = sys.modules[package]
+    #     importlib.reload(module)
 
     def execute(self, command_name, args, context):
         CommandClass = self.COMMANDS.get(command_name)
 
         if CommandClass:
-            command_package = CommandClass.__module__
-            self.reload(command_package)
+            # command_package = CommandClass.__module__
+            # self.reload(command_package)
 
             CommandClass = self.COMMANDS.get(command_name)
             command = CommandClass(cmd_context=self.COMMANDS)

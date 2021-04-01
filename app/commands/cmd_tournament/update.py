@@ -5,5 +5,5 @@
 
 
 def update(args, context):
-    """Update a Tournament."""
+    """Update a tournament."""
     pass

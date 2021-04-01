@@ -10,7 +10,7 @@ class BaseView:
 
     title = " {} "
     body = []
-    footer = " Waiting Input "
+    footer = " Awaiting Command "
 
     def _show_fields(self, fields):
         for field in fields:
@@ -33,6 +33,17 @@ class BaseView:
 
         self.set_footer("Waiting Input")
         self.render_view()
+
+    def colorize(self, color_name, text):
+        """Colorize a string witha given color"""
+
+        colors = {}
+        colors["danger"] = "\033[91m"
+        colors["success"] = "\033[92m"
+        colors["warning"] = "\033[93m"
+        colors["info"] = "\033[94m"
+
+        return colors[color_name] + text + "\033[0m"
 
     def clear_screen(self):
         """Clear the screen."""

@@ -1,6 +1,6 @@
 import re
 
-from tinydb import TinyDB, Query, where
+from tinydb import TinyDB, Query
 
 from app.database import TINY_DB_PATH
 
@@ -23,11 +23,12 @@ class Player:
 
         return saved_player
 
-    def delete_one(self, id):
+    @classmethod
+    def delete_one(cls, id):
         """Delete a player by ID
         returns the deleted player
         """
-        deleted = self.players.remove(where("doc_id") == int(id))
+        deleted = cls.players.remove(doc_id=[id])
         return deleted
 
     @classmethod
@@ -50,12 +51,16 @@ class Player:
         found_players = None
 
         if key:
-            if key == "first_name":
-                found_players = cls.players.search(player[key].matches(value, re.IGNORECASE))
+            search_type = player[key] == value
+
+            if key == "last_name" or key == "first_name":
+                search_type = player[key].matches(value, re.IGNORECASE)
+            
             elif key == "rank":
-                found_players = cls.players.search(player[key] == int(value))
-            else:
-                found_players = cls.players.search(player[key] == value)
+                search_type = player[key] == int(value)
+
+            found_players = cls.players.search(search_type)
+
         else:
             found_players = cls.players.all()
 

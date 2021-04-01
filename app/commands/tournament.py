@@ -25,9 +25,10 @@ class TournamentCommand(BaseCommand):
         self.cmd_context = cmd_context
 
         self.context = BaseCommand.context.copy()
+        self.context["sub_commands"] = self.sub_commands
+
         self.context["tournament_view"] = TournamentView()
         self.context["player_view"] = PlayerView()
-
         self.context["tournament_model"] = Tournament
         self.context["player_model"] = Player
 

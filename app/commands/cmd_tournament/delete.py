@@ -3,5 +3,5 @@
 
 
 def delete(args, context):
-    """Delete a Tournament by its ID."""
+    """Delete a tournament by its ID."""
     pass

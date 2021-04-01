@@ -31,15 +31,15 @@ class TournamentView(BaseView):
 
         text_table.add_rows([headers, *rows])
         table = text_table.draw()
-
-        # doing fancy stuff
-        temp = table.split("\n")
-        temp = [self.center_item(v) for v in temp]
-        table = "\n".join(temp)
+        table = self.center_table(table)
 
         self.add_body(table)
         self.set_footer("Waiting Input")
         self.render_view()
 
-    def render_created_tournament(self, title):
-        pass
+    def render_created_tournament(self, fields, title):
+        self.body = []
+        self.set_title(title)
+
+        self._show_fields(fields)
+        self.render_view()
