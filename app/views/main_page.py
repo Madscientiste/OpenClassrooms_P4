@@ -14,6 +14,7 @@ class MainView(BaseView):
         self.add_body(self.center_item("Example"))
         self.add_body(self.center_item(f"{self.current_cmd} <action>"))
 
+
     def render_main_page(self, commands):
         self.body = []
 
@@ -60,20 +61,26 @@ class MainView(BaseView):
 
         self.render_view()
 
-    def display_actions(self, actions):
+    def display_actions(self, actions, is_class=True):
         """Display the available actions for a command"""
         self.body = []  # Reset the body to avoid duplicates
 
         text_table = Texttable()
-        headers = ["Action Name", " ----- ", "Description"]
+        headers = ["Action Name", "Usage" if is_class else " ----- ", "Description"]
 
         rows = []
-        middleRow = ""
 
         print("Action not found, or missing, here what you can do:")
         for action in actions.keys():
-            action_desc = actions[action].__doc__
-            rows.append([action, middleRow, action_desc])
+            
+            if is_class:
+                action_desc = actions[action].description
+                usage = actions[action].usage
+            else:
+                action_desc = actions[action].__doc__
+                usage = " "
+                
+            rows.append([action, usage, action_desc])
 
         text_table.add_rows([headers, *rows])
 

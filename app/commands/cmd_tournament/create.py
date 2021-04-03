@@ -3,6 +3,9 @@ import random
 from faker import Faker
 
 
+class CreateTournament:
+    pass
+
 def create(args, context):
     """Create a new tournament."""
     tournament_view = context["tournament_view"]

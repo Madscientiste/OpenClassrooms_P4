@@ -1,3 +1,3 @@
-from .create import create
-from .delete import delete
-from .findby import findby
+from .create import CreatePlayer
+from .delete import DeletePlayer
+from .findby import FindPlayer

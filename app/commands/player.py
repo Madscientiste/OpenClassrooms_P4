@@ -1,4 +1,4 @@
-from .cmd_player import create, delete, findby
+from .cmd_player import CreatePlayer, DeletePlayer, FindPlayer
 
 from .abc import BaseCommand
 
@@ -15,9 +15,9 @@ class PlayerCommand(BaseCommand):
     description = "Player related command"
 
     sub_commands = {}
-    sub_commands["create"] = create
-    sub_commands["delete"] = delete
-    sub_commands["findby"] = findby
+    sub_commands["create"] = CreatePlayer
+    sub_commands["delete"] = DeletePlayer
+    sub_commands["findby"] = FindPlayer
 
     def __init__(self, cmd_context) -> None:
         super().__init__(current_cmd=self.name)
@@ -31,4 +31,4 @@ class PlayerCommand(BaseCommand):
 
     @sanitize_params
     def execute(self, action, args):
-        self.execute_sub(action, context=self.context, args=args)
+        self.execute_sub(action, args=args)

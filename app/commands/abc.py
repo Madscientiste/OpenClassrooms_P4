@@ -1,3 +1,7 @@
+import sys
+import importlib
+from importlib import resources
+
 from app.views import ErrorView, MainView
 
 
@@ -15,12 +19,27 @@ class BaseCommand:
         self.context["main_view"] = MainView(current_cmd)
         self.current_cmd = current_cmd
 
-    def execute_sub(self, sub_cmd_name, *args, **kwargs):
-        sub_cmd = self.sub_commands.get(sub_cmd_name)
+    def _reload_sub(self, package):
+        module = sys.modules[package]
+        importlib.reload(module)
 
-        if not sub_cmd:
-            self.context["error_view"].generic_error(f"Sub command [{sub_cmd_name}] in [{self.current_cmd}] doesn't exist")
-            self.context["main_view"].display_actions(self.sub_commands)
+    def sanitize_args():
+        pass
+
+    def execute_sub(self, sub_cmd_name, args):
+        error_view = self.context["error_view"]
+        main_view = self.context["main_view"]
+
+        SubCommand = self.sub_commands.get(sub_cmd_name)
+
+        if not SubCommand:
+            error_view.generic_error(f"Sub command [{sub_cmd_name}] in [{self.current_cmd}] doesn't exist")
+            main_view.display_actions(self.sub_commands)
             return
-            
-        sub_cmd(*args, **kwargs)
+
+        # Dev Purpose
+        command_package = SubCommand.__module__
+        self._reload_sub(command_package)
+
+        command = SubCommand(context=self.context)
+        command.execute(args)
