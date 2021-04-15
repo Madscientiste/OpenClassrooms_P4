@@ -1,8 +1,7 @@
 from app.views import MainView
 
 from .abc import BaseCommand
-
-from app.utilities.decorators import sanitize_params
+from app.models import Tournament
 from app.utilities.handler import CommandHandler
 
 
@@ -20,7 +19,8 @@ class MainCommand(BaseCommand):
 
         self.context = BaseCommand.context.copy()
         self.context["main_view"] = MainView(None)
+        self.context["tournament_model"] = Tournament
 
     def execute(self, args):
-        main_view: MainView = self.context["main_view"]
-        main_view.render_main_page(commands=self.cmd_context)
+        tournaments = self.context["tournament_model"].find_all()
+        self.context["main_view"].render_main_page(self.cmd_context, tournaments)

@@ -28,10 +28,10 @@ class CommandHandler:
     def execute(self, command_name, args, context):
         error_view = context["error_view"]
         main_view = context["main_view"]
-
+        tournament_model = context["tournament_model"]
+        
         CommandClass = self.COMMANDS.get(command_name)
-        
-        
+
         if CommandClass:
             # command_package = CommandClass.__module__
             # self.reload(command_package)
@@ -41,7 +41,9 @@ class CommandHandler:
             command.execute(args)
         else:
             error_view.generic_error(message=f"Command [{command_name}] doesn't exist", centered=True)
-            main_view.render_main_page(self.COMMANDS.values())
+
+            tournaments = tournament_model.find_all()
+            main_view.render_main_page(self.COMMANDS.values(), tournaments)
 
     @classmethod
     def register_command(cls, command):

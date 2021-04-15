@@ -30,7 +30,7 @@ class ErrorView(BaseView):
         self.body = []  # Reset the body to avoid duplicates
         self.set_title("Missing Value")
 
-        self.add_body(f"Missing value for : {self.colorize('warning', missing_value)}")
+        self.add_body(f"Missing value for : {self.colorize('success', missing_value)}")
 
         if randomized:
             self.add_body("value has been randomized.")

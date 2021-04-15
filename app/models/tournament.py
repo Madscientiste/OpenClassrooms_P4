@@ -15,6 +15,8 @@ class Tournament:
         self.time_control = time_control
         self.description = description
 
+        self.state = {"current_round": None, "rounds": {}}
+
     def save(self):
         """Save the current player into the database"""
         tournament = self.__dict__
@@ -23,6 +25,22 @@ class Tournament:
 
         return saved_tournament
 
+    @classmethod
+    def update_one(cls, tournament):
+        pass
+
+    @classmethod
+    def find_all(cls):
+        found_tournaments = cls.tournaments.all()
+        return found_tournaments
+
+    @classmethod
+    def find_one(cls, id) -> list:
+        """Find one tournament by ID
+        returns tournament
+        """
+        found_tournament = cls.tournaments.get(doc_id=int(id))
+        return found_tournament
 
 
 ## turn == 1 jour de tournois

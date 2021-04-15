@@ -1,4 +1,4 @@
-from .cmd_tournament import create, update, delete, start
+from .cmd_tournament import CreateTournament, DeleteTournament, StartTournament, ShowTournament
 from .abc import BaseCommand
 
 from app.models import Tournament, Player
@@ -14,10 +14,10 @@ class TournamentCommand(BaseCommand):
     description = "tournament related command"
 
     sub_commands = {}
-    sub_commands["create"] = create
-    sub_commands["update"] = update
-    sub_commands["delete"] = delete
-    sub_commands["start"] = start
+    sub_commands["create"] = CreateTournament
+    sub_commands["delete"] = DeleteTournament
+    sub_commands["start"] = StartTournament
+    sub_commands["show"] = ShowTournament
 
     def __init__(self, cmd_context) -> None:
         super().__init__(current_cmd=self.name)
@@ -34,4 +34,4 @@ class TournamentCommand(BaseCommand):
 
     @sanitize_params
     def execute(self, action, args):
-        self.execute_sub(action, context=self.context, args=args)
+        self.execute_sub(action, args=args)

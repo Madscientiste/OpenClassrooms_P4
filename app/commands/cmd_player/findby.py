@@ -16,26 +16,6 @@ class FindPlayer(BaseSubCommand):
             "rank": self.findby_rank,
         }
 
-    def execute(self, args):
-        action = args.pop(0) if len(args) else None
-        data = args.pop(0) if len(args) else None
-
-        command = self.actions.get(action)
-
-        if not command:
-            # return self.main_veiw.display_actions(actions=self.actions)
-            if action is not None:
-                self.error_view.generic_error(f"Action [{action}] in [{self.name}] doesn't exist")
-
-            self.main_view.display_actions(self.actions, is_class=False)
-            return
-
-        error = command(data)
-
-        if error:
-            self.error_view.generic_error(message=error)
-            self.main_view.display_actions(self.actions, is_class=False)
-
     def find_all(self, data):
         """Find all the players that has been registred"""
         player_list = self.player_model.find_many(None, None)
@@ -79,3 +59,23 @@ class FindPlayer(BaseSubCommand):
             return f"player with [{player_rank}] rank not found"
 
         self.player_view.render_multiple_players(found_players, "Found Player(s)")
+
+    def execute(self, args):
+        action = args.pop(0) if len(args) else None
+        data = args.pop(0) if len(args) else None
+
+        command = self.actions.get(action)
+
+        if not command:
+            # return self.main_veiw.display_actions(actions=self.actions)
+            if action is not None:
+                self.error_view.generic_error(f"Action [{action}] in [{self.name}] doesn't exist")
+
+            self.main_view.display_actions(self.actions, is_class=False)
+            return
+
+        error = command(data)
+
+        if error:
+            self.error_view.generic_error(message=error)
+            self.main_view.display_actions(self.actions, is_class=False)

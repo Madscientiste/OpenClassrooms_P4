@@ -21,11 +21,16 @@ class DeletePlayer(BaseSubCommand):
             self.main_view.display_actions(actions=self.sub_commands)
             return
 
-        deleted_player = self.player_model.delete_one(id=int(player_id))
+        pre_delete = self.player_model.find_one(id=int(player_id))
+        deleted_players = self.player_model.delete_one(id=int(player_id))
 
-        if not deleted_player:
+        if not deleted_players:
             self.error_view.generic_error(message=f"player id [{player_id}] not found")
             self.main_view.display_actions(actions=self.sub_commands)
             return
 
-        self.player_view.render_single_player(deleted_player, "Deleted Player")
+        if pre_delete.doc_id == deleted_players.pop(0):
+            self.player_view.render_single_player(pre_delete, "Deleted Player")
+        else:
+            self.error_view.generic_error(message=f"Doesn't Match")
+            self.main_view.display_actions(actions=self.sub_commands)

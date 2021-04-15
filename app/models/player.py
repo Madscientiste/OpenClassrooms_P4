@@ -15,6 +15,9 @@ class Player:
         self.sexe = sexe
         self.rank = rank
 
+        self.points = 0
+        self.history = []
+
     def save(self):
         """Save the current player into the database"""
         player = self.__dict__
@@ -28,7 +31,7 @@ class Player:
         """Delete a player by ID
         returns the deleted player
         """
-        deleted = cls.players.remove(doc_id=[id])
+        deleted = cls.players.remove(doc_ids=[id])
         return deleted
 
     @classmethod
@@ -55,7 +58,7 @@ class Player:
 
             if key == "last_name" or key == "first_name":
                 search_type = player[key].matches(value, re.IGNORECASE)
-            
+
             elif key == "rank":
                 search_type = player[key] == int(value)
 

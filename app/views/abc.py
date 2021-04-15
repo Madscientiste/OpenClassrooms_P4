@@ -14,7 +14,10 @@ class BaseView:
 
     def _show_fields(self, fields):
         for field in fields:
-            self.add_body(f'-- {field["name"]} : {field["value"]}')
+            if field["name"] == "players" and isinstance(field["value"], list):
+                self.add_body(f'-- {field["name"]} : {[player.doc_id for player in field["value"]]}')
+            else:
+                self.add_body(f'-- {field["name"]} : {field["value"]}')
 
     def _show_generator_note(self):
         """A Note for the generator of values"""
@@ -22,6 +25,20 @@ class BaseView:
         self.add_body(f" Note ".center(self.SCREEN_WIDTH, "-"))
         self.add_body(" use * as input to generate a random value regarding that field ".center(self.SCREEN_WIDTH, "-"))
         self.add_body(f"".center(self.SCREEN_WIDTH, "-"))
+
+    def _show_tournament(self, tournament):
+        players = lambda players: [player["id"] for player in players]
+
+        self.add_body(f"-- id : {tournament.doc_id}")
+
+        for key in tournament.keys():
+            if key == "state":
+                continue
+
+            if key == "players":
+                self.add_body(f"-- {key} : {players(tournament[key])}")
+            else:
+                self.add_body(f"-- {key} : {tournament[key]}")
 
     def render_questions(self, fields, title):
         """Render questions using list of fields"""

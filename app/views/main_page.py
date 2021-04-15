@@ -14,8 +14,7 @@ class MainView(BaseView):
         self.add_body(self.center_item("Example"))
         self.add_body(self.center_item(f"{self.current_cmd} <action>"))
 
-
-    def render_main_page(self, commands):
+    def render_main_page(self, commands, tournaments):
         self.body = []
 
         self.set_title("Main Application")
@@ -40,16 +39,14 @@ class MainView(BaseView):
         self.add_body("Ongoing Tournaments")
         self.add_body("-------------------")
         self.add_body("")
+        
 
-        self.add_body("[id] -> Tournament Name")
-        self.add_body("------- location")
-        self.add_body("------- date")
-        self.add_body("------- turns")
-        self.add_body("------- players")
-        self.add_body("------- players")
-        self.add_body("------- time_control")
-        self.add_body("------- description")
-        self.add_body("")
+        for index, tournament in enumerate(tournaments):
+            index += 1  # Caveat
+
+            self.add_body(f"----> Tournament {index} of {len(tournaments)}")
+            self._show_tournament(tournament)
+            self.add_body(" ")
 
         self.add_body(self.center_item("", no_space=True))
         self.add_body("")
@@ -72,14 +69,14 @@ class MainView(BaseView):
 
         print("Action not found, or missing, here what you can do:")
         for action in actions.keys():
-            
+
             if is_class:
                 action_desc = actions[action].description
                 usage = actions[action].usage
             else:
                 action_desc = actions[action].__doc__
                 usage = " "
-                
+
             rows.append([action, usage, action_desc])
 
         text_table.add_rows([headers, *rows])
