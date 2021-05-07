@@ -13,14 +13,14 @@ class View(BaseView):
     def render_match(self, match: other.Match):
         self.set_title(f"{match.player1.first_name} vs {match.player2.first_name}")
 
-        self.add_body(f"CMD : Description")
-        self.add_body(f"-----------------")
-        self.add_body(f"- a : if {match.player1.first_name} has won")
-        self.add_body(f"- b : if {match.player2.first_name} has won")
-        self.add_body(f"- c : if its a TIE")
-        self.add_body(f"- d : to go back")
+        self.add_body("CMD : Description")
+        self.add_body("-----------------")
+        self.add_body("- a : if {match.player1.first_name} has won")
+        self.add_body("- b : if {match.player2.first_name} has won")
+        self.add_body("- c : if its a TIE")
+        self.add_body("- d : to go back")
 
-        self.add_body(f" ")
+        self.add_body(" ")
         self.render_view()
 
     def render_selected_tournament(self, tournament: database.Tournament, state: database.State, commands: list):
@@ -58,7 +58,7 @@ class View(BaseView):
             self.add_body(f"{left_side}{right_side}")
 
         self.add_body(" ")
-        self.add_body(self.center_item(f"Available Commands", char="-"))
+        self.add_body(self.center_item("Available Commands", char="-"))
         self.add_body(" ")
 
         self.show_commands(commands)

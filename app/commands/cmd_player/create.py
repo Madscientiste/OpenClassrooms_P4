@@ -15,45 +15,38 @@ class Command(BaseCommand):
 
     # Error Handling
 
-    def _validate_date(*args, **kwargs):
-        class DateValidator(Validator):
-            def validate(self, document):
-                try:
-                    datetime.strptime(document.text, "%d/%m/%Y")
-                except:
-                    raise ValidationError(
-                        message="Date is in the wrong format, it should be : DD/MM/YYYY",
-                        cursor_position=document.cursor_position,
-                    )
+    class DateValidator(Validator):
+        def validate(self, document):
+            try:
+                datetime.strptime(document.text, "%d/%m/%Y")
+            # flake8: noqa
+            except:
+                raise ValidationError(
+                    message="Date is in the wrong format, it should be : DD/MM/YYYY",
+                    cursor_position=document.cursor_position,
+                )
 
-        return DateValidator()
+    class TextValidator(Validator):
+        def validate(self, document):
+            if re.search(r"\d", document.text):
+                raise ValidationError(
+                    message="This input contains numeric characters",
+                    cursor_position=document.cursor_position,
+                )
 
-    def _validate_text(*args, **kwargs):
-        class TextValidator(Validator):
-            def validate(self, document):
-                if re.search(r"\d", document.text):
-                    raise ValidationError(
-                        message="This input contains numeric characters",
-                        cursor_position=document.cursor_position,
-                    )
+    class DigitValidator(Validator):
+        def validate(self, document):
+            if document.text.isdigit():
+                raise ValidationError(
+                    message="Only numbers are allowed",
+                    cursor_position=document.cursor_position,
+                )
 
-        return TextValidator()
-
-    def _validate_digit(*args, **kwargs):
-        class DigitValidator(Validator):
-            def validate(self, document):
-                if document.text.isdigit():
-                    raise ValidationError(
-                        message="Only numbers are allowed",
-                        cursor_position=document.cursor_position,
-                    )
-
-        return DigitValidator()
-
-    # Running the command
 
     def create_multiples(count):
         pass
+
+    # Running the command
 
     def run(self, context: typings.Context, args: list):
         player_model = context["models"]["Player"]
@@ -61,25 +54,24 @@ class Command(BaseCommand):
 
         questions = {
             "first_name": text(
-                message=f"Enter the first name of the player:",
-                validate=self._validate_text(),
-                validate_while_typing=True,
+                message="Enter the first name of the player:",
+                validate=self.TextValidator(),
             ),
             "last_name": text(
-                message=f"Enter the last name of the player:",
-                validate=self._validate_text(),
+                message="Enter the last name of the player:",
+                validate=self.TextValidator(),
             ),
             "birthday": text(
-                message=f"Enter the birthday of the player:",
-                validate=self._validate_date(),
+                message="Enter the birthday of the player:",
+                validate=self.DateValidator(),
             ),
             "sexe": select(
-                message=f"Enter the sexe of the player:",
+                message="Enter the sexe of the player:",
                 choices=["male", "female"],
             ),
             "rank": text(
-                message=f"Enter the rank of the player:",
-                validate=self._validate_digit(),
+                message="Enter the rank of the player:",
+                validate=self.DigitValidator(),
             ),
         }
 

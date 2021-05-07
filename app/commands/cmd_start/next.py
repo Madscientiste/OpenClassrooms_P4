@@ -1,6 +1,6 @@
 from app.commands.base import BaseCommand
 from app.utilities import typings, errors
-from app.models import other, database
+from app.models import database
 
 
 class Command(BaseCommand):
@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def run(self, context: typings.Context, tournament: database.Tournament, args: list, state: database.State):
         if tournament.rounds == state.current_round + 1:
             return
-            
+
         round = tournament.round_instances[state.current_round]
 
         # Can't go to the next round if the matches aren't completed

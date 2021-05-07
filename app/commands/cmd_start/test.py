@@ -1,9 +1,9 @@
 from app.models.database import player
-from functools import reduce
+# flake8: noqa
 
 from app.commands.base import BaseCommand
-from app.utilities import typings, errors
-from app.models import other, database
+from app.utilities import typings
+from app.models import database
 
 
 class Command(BaseCommand):
@@ -21,4 +21,3 @@ class Command(BaseCommand):
 
             for base_player, new_player in zip(base_players, players):
                 base_player.rank += new_player.points
-

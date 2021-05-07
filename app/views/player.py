@@ -33,7 +33,7 @@ class View(BaseView):
 
         players: list = sorted([database.Player.to_dict(x) for x in players], key=lambda k: k[sort_by])
         header: list = vars(database.Player()).keys()
-        
+
         header_size = len(header)
         self.fluidify_table(header_size)
         self.center_cols_items(header_size)

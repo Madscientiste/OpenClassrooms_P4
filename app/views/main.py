@@ -14,7 +14,7 @@ class View(BaseView):
         for index, tournament in enumerate(tournaments):
             index += 1
             state = [x for x in states if x.id == tournament.id].pop(0)
-            
+
             if not state.is_ongoing:
                 continue
 

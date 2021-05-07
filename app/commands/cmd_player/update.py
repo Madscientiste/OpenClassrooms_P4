@@ -16,7 +16,7 @@ class Command(BaseCommand):
         value = self.pop_arg(args)
 
         if not player_id:
-            raise errors.GenericError(f"Player id is required")
+            raise errors.GenericError("Player id is required")
 
         blacklist = ["doc_id", "id"]
 
@@ -29,6 +29,5 @@ class Command(BaseCommand):
         player = player_model.find_one(player_id)
         setattr(player, key, value)
         player = player.save()
-
 
         player_view.render_single(player, title="Updated Players")

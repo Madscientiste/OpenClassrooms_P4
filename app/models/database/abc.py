@@ -1,3 +1,4 @@
+
 import re
 from pathlib import Path
 from tinydb import TinyDB, Query, table
@@ -29,6 +30,7 @@ class BaseDB:
     def to_dict(self) -> dict:
         """Convert the current class into a dictionnary"""
         serialized: dict = vars(self)
+        # flake8: noqa
         serialize = lambda value: value.to_dict() if hasattr(value, "to_dict") else value
 
         for key, value in serialized.items():

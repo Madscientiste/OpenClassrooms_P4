@@ -1,5 +1,5 @@
 from app.commands.base import BaseCommand
-from app.utilities import errors, typings
+from app.utilities import errors
 
 from .base import baseController
 

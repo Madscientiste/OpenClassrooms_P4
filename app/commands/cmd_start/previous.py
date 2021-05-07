@@ -1,6 +1,6 @@
 from app.commands.base import BaseCommand
-from app.utilities import typings, errors
-from app.models import other, database
+from app.utilities import typings
+from app.models import database
 
 
 class Command(BaseCommand):

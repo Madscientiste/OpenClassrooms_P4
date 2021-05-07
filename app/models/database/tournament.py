@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from copy import deepcopy
 from tinydb import TinyDB
 

@@ -56,6 +56,7 @@ class BaseView:
                     for match in round["matches"]:
                         player1 = match["player1"]["first_name"]
                         player2 = match["player2"]["first_name"]
+                        # flake8: noqa
                         colorize = lambda text: self.colorize("warning", text)
 
                         if match["winner"]:

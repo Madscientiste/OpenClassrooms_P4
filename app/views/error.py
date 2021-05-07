@@ -9,7 +9,7 @@ class View(BaseView):
     def _with_traceback(self, error):
         if hasattr(error, "custom") or not hasattr(error, "__traceback__"):
             return
-        
+
         self.add_body(" ")
         traceback = error.__traceback__
 

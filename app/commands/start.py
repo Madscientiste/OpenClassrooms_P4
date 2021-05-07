@@ -1,4 +1,3 @@
-from app.models.database.tournament import Tournament
 from .base import BaseCommand
 
 from app.controllers import Commands

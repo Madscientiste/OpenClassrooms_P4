@@ -13,5 +13,4 @@ class Views(baseController):
 
     def get(self, view_name: str):
         view = self.cache.get(view_name)
-        
         return self.reload(view_name, view.__module__)

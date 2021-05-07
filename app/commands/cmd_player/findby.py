@@ -1,4 +1,3 @@
-from os import error
 from app.commands.base import BaseCommand
 from app.utilities import typings, errors
 

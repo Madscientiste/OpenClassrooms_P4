@@ -1,6 +1,5 @@
 from .abc import BaseModel
 
-
 from app.models import other
 
 
