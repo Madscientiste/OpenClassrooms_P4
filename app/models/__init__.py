@@ -1,2 +1,2 @@
-from .player import Player
-from .tournament import Tournament
+from . import database
+from . import other

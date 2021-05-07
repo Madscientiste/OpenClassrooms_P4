@@ -1,81 +1,26 @@
-from .abc import BaseSubCommand
+from os import error
+from app.commands.base import BaseCommand
+from app.utilities import typings, errors
 
 
-class FindPlayer(BaseSubCommand):
+class Command(BaseCommand):
     name = "findby"
-    usage = "findby <action> <value>"
-    description = "Find a Player by ID, Rank or first_name."
+    usage = "player findby <key> <value>"
+    description = "Find a player by a key"
 
-    def __init__(self, context) -> None:
-        super().__init__(context)
+    def run(self, context: typings.Context, args: list):
+        player_model = context["models"]["Player"]
+        player_view = context["views"]["player"]
 
-        self.actions = {
-            "*": self.find_all,
-            "id": self.findby_id,
-            "name": self.findby_name,
-            "rank": self.findby_rank,
-        }
+        key = self.pop_arg(args)
+        value = self.pop_arg(args)
 
-    def find_all(self, data):
-        """Find all the players that has been registred"""
-        player_list = self.player_model.find_many(None, None)
+        if key and not value:
+            raise errors.GenericError(f"Missing value for {key}")
 
-        if not player_list:
-            return "No players found"
-
-        self.player_view.render_multiple_players(player_list, "Registred Player(s)")
-
-    def findby_id(self, player_id):
-        """Find one player by its Id"""
-
-        if not player_id or not player_id.isdigit():
-            return "id must be a number"
-
-        found_player = self.player_model.find_one(id=int(player_id))
-
-        if not found_player:
-            return f"player id [{player_id}] not found"
-
-        self.player_view.render_single_player(found_player, "Found Player")
-
-    def findby_name(self, player_name):
-        """Find many player by name (last name)"""
-        found_players = self.player_model.find_many("last_name", player_name)
+        found_players = player_model.find_many(key, value)
 
         if not found_players:
-            return f"No players with name of [{player_name}] has been found"
+            raise errors.GenericError("No players found")
 
-        self.player_view.render_multiple_players(found_players, "Found Player(s)")
-
-    def findby_rank(self, player_rank):
-        """Find many players by rank"""
-
-        if not player_rank or not player_rank.isdigit():
-            return "rank must be a number"
-
-        found_players = self.player_model.find_many("rank", player_rank)
-
-        if not found_players:
-            return f"player with [{player_rank}] rank not found"
-
-        self.player_view.render_multiple_players(found_players, "Found Player(s)")
-
-    def execute(self, args):
-        action = args.pop(0) if len(args) else None
-        data = args.pop(0) if len(args) else None
-
-        command = self.actions.get(action)
-
-        if not command:
-            # return self.main_veiw.display_actions(actions=self.actions)
-            if action is not None:
-                self.error_view.generic_error(f"Action [{action}] in [{self.name}] doesn't exist")
-
-            self.main_view.display_actions(self.actions, is_class=False)
-            return
-
-        error = command(data)
-
-        if error:
-            self.error_view.generic_error(message=error)
-            self.main_view.display_actions(self.actions, is_class=False)
+        player_view.render_multiples(found_players, title="Found Players")

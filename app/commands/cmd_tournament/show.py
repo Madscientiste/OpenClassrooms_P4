@@ -1,23 +1,19 @@
-import random
+from app.commands.base import BaseCommand
+from app.utilities import typings, errors
 
-from .abc import BaseSubCommand
 
-
-class ShowTournament(BaseSubCommand):
+class Command(BaseCommand):
     name = "show"
     usage = "tournament show"
-    description = "Show all tournaments"
+    description = "Show all the tournaments"
 
-    def __init__(self, context) -> None:
-        super().__init__(context)
+    def run(self, context: typings.Context, args: list):
+        tournament_model = context["models"]["Tournament"]
+        tournament_view = context["views"]["tournament"]
 
-    def execute(self, args):
-        """Execution of the current command"""
-        tournaments = self.tournament_model.find_all()
+        all_tournaments = tournament_model.find_many()
 
-        if not tournaments:
-            self.error_view.generic_error("No tournaments found")
-            self.main_view.display_actions(actions=self.sub_commands)
-            return
+        if not all_tournaments:
+            raise errors.GenericError("Nothing to show")
 
-        self.tournament_view.render_all_tournaments(tournaments, "Current Tournaments")
+        tournament_view.render_multiples(all_tournaments)

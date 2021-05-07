@@ -1,34 +1,29 @@
-from .cmd_player import CreatePlayer, DeletePlayer, FindPlayer
+from .base import BaseCommand
+from app.controllers import Commands
 
-from .abc import BaseCommand
-
-from app.models import Player, Tournament
-from app.utilities.decorators import sanitize_params
-from app.utilities.handler import CommandHandler
-from app.views import PlayerView
+from app.utilities import typings, errors
 
 
-@CommandHandler.register_command
-class PlayerCommand(BaseCommand):
+class Command(BaseCommand):
     name = "player"
-    usage = "player <sub_command>"
+    usage = "player <command>"
     description = "Player related command"
 
-    sub_commands = {}
-    sub_commands["create"] = CreatePlayer
-    sub_commands["delete"] = DeletePlayer
-    sub_commands["findby"] = FindPlayer
+    def __init__(self) -> None:
+        self.commands = Commands(package="app.commands.cmd_player", parent_command=self.name)
 
-    def __init__(self, cmd_context) -> None:
-        super().__init__(current_cmd=self.name)
+    def run(self, context: typings.Context, args: list):
+        try:
+            main_view = context["views"]["main"]
 
-        self.cmd_context = cmd_context
+            sub_commands = self.commands.cache.values()
+            main_view.render_available_commands(sub_commands)
 
-        self.context = BaseCommand.context.copy()
-        self.context["sub_commands"] = self.sub_commands
-        self.context["player_view"] = PlayerView()
-        self.context["player_model"] = Player
+            command_name = args.pop(0) if args else None
+            self.commands.execute(command_name, args=args, context=context)
 
-    @sanitize_params
-    def execute(self, action, args):
-        self.execute_sub(action, args=args)
+        except Exception as e:
+            if not hasattr(e, "custom"):
+                errors.GenericError(e)
+
+            main_view.render_available_commands(sub_commands)
