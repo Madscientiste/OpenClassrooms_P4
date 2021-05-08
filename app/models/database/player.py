@@ -1,4 +1,3 @@
-
 from tinydb import TinyDB
 from .abc import BaseDB, STORAGE_PATH
 
@@ -27,4 +26,3 @@ class Player(BaseDB):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
- 

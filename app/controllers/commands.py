@@ -11,8 +11,12 @@ class Commands(baseController):
         super().__init__(search_class="Command", *args, **kwargs)
 
     def execute(self, command_name: str, *args, **kwargs):
-        if not command_name:
+
+        if not command_name and not self.parent_command:
             raise errors.GenericError("Missing Command")
+
+        if not command_name and self.parent_command:
+            raise errors.AvailableCommands(commands=self.cache.values())
 
         command = self.cache.get(command_name)
 

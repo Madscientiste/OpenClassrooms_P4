@@ -1,11 +1,12 @@
 from app.controllers.views import Views
+from app.utilities import typings
 
 
 class BaseError(Exception):
     """Base Exception"""
 
     custom = True
-    views = Views(package="app.views")
+    views: typings.Views = Views(package="app.views")
 
     error_view = views["error"]
     main_view = views["main"]

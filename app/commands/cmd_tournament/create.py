@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from app.commands.base import BaseCommand
 from app.utilities import typings
 
