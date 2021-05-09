@@ -99,10 +99,11 @@ class View(BaseView):
     def render_report(self, players: other.Player, sort_by="points"):
         self.reset_values()
 
-        self.set_title("Leaderboard sorted by :")
+        self.set_title(f"Leaderboard sorted by : {sort_by}")
 
-        players: list = sorted([database.Player.to_dict(x) for x in players], key=lambda k: k[sort_by])
-        header: list = vars(other.Player()).keys()
+        players: list = sorted([database.Player.to_dict(x) for x in players], key=lambda k: k[sort_by], reverse=True)
+        header: list = [x for x in vars(other.Player()).keys() if x not in ["history"]]
+        warn = lambda text: self.colorize("warning", text)
 
         header_size = len(header)
         self.fluidify_table(header_size)
@@ -111,12 +112,23 @@ class View(BaseView):
         self.text_table.add_row(header)
 
         for player in players:
-            self.text_table.add_row(player.values())
+            values = list(player.values())
+            values.pop()
+
+            self.text_table.add_row(values)
 
         table = self.text_table.draw()
         table = self.center_table(table)
 
         self.add_body(table)
+
+        self.add_body(" ")
+        self.add_body(self.center_item("Note", "-"))
+        self.add_body(" ")
+
+        note = f"> to update the ranks of the player use the command {warn('commit')} <"
+        self.add_body(note.center(self.SCREEN_WIDTH + 8, " "))
+
         self.render_view(wait=True)
 
     def tournament_quit(self):

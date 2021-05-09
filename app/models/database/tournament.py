@@ -41,7 +41,7 @@ class Tournament(BaseDB):
         assert len(self.players) % 2 == 0, "Players not equal"
 
         if len(self.round_instances) < 1:
-            players = sorted(self.players, key=lambda player: int(player.rank), reverse=True)
+            players = deepcopy(sorted(self.players, key=lambda player: int(player.rank), reverse=True))
 
             round = other.Round()
 
@@ -57,7 +57,7 @@ class Tournament(BaseDB):
 
                 player1.history.append(player2.id)
                 player2.history.append(player1.id)
-
+                
                 round.add_match(other.Match(player1, player2))
 
             return round

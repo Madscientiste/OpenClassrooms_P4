@@ -8,11 +8,13 @@ from app.utilities import typings
 
 class Command(BaseCommand):
     name = "report"
-    usage = "report <sort_by> <key>"
+    usage = "report <sort_by> <--->"
     description = "Show the report of the current Tournament"
 
-    def run(self, tournament: database.Tournament, context: typings.Context, *args, **kwargs):
+    def run(self, tournament: database.Tournament, context: typings.Context, args: list):
         tournament_view = context["views"]["tournament"]
+
+        sort_by = self.pop_arg(args) or "points"
 
         sortby_id = lambda _interable: sorted(_interable, key=lambda x: x.id)
         base_players = deepcopy(sortby_id(tournament.players))
@@ -23,4 +25,4 @@ class Command(BaseCommand):
             for base_player, new_player in zip(base_players, players):
                 base_player.rank += new_player.points
 
-        tournament_view.render_report(base_players)
+        tournament_view.render_report(base_players, sort_by)
