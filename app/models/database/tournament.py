@@ -40,9 +40,9 @@ class Tournament(BaseDB):
         """Generate a round"""
         assert len(self.players) % 2 == 0, "Players not equal"
 
-        players = sorted(self.players, key=lambda player: int(player.rank), reverse=True)
-
         if len(self.round_instances) < 1:
+            players = sorted(self.players, key=lambda player: int(player.rank), reverse=True)
+
             round = other.Round()
 
             length = len(players)
@@ -62,28 +62,29 @@ class Tournament(BaseDB):
 
             return round
         else:
+            previous_round = self.round_instances[self.state.current_round - 1]
+            previous_players = previous_round.get_players()
+            players = sorted(previous_players, key=lambda player: int(player.rank), reverse=True)
+
             round = other.Round()
 
             locked_ids = []
 
-            previous_round = self.round_instances[self.state.current_round - 1]
-            previous_players = previous_round.get_players()
+            # sortby_id = lambda _interable: sorted(_interable, key=lambda x: x.id)
 
-            sortby_id = lambda _interable: sorted(_interable, key=lambda x: x.id)
+            # # Ensuring they are matching
+            # self.players = sortby_id(self.players)
+            # previous_players = sortby_id(previous_players)
 
-            # Ensuring they are matching
-            self.players = sortby_id(self.players)
-            previous_players = sortby_id(previous_players)
-
-            #: Sorting the self.players based on the previous round's players's points
-            players = [
-                x
-                for x, _ in sorted(
-                    zip(self.players, previous_players),
-                    key=lambda player: (float(player[1].points), int(player[1].rank)),
-                    reverse=True,
-                )
-            ]
+            # #: Sorting the self.players based on the previous round's players's points
+            # players = [
+            #     x
+            #     for x, _ in sorted(
+            #         zip(self.players, previous_players),
+            #         key=lambda player: (float(player[1].points), int(player[1].rank)),
+            #         reverse=True,
+            #     )
+            # ]
 
             for player in players:
                 player: other.Player
@@ -100,6 +101,9 @@ class Tournament(BaseDB):
                     locked_ids.append(opponent.id)
                     player.history.append(opponent.id)
                     opponent.history.append(player.id)
+
+                    player.points = 0
+                    opponent.points = 0
 
                     round.add_match(other.Match(player, opponent))
                     break

@@ -44,37 +44,6 @@ class View(BaseView):
         self.add_body(f"{'[ID]'.ljust(space, ' ')}{'STATE'.rjust(space, ' ')}")
 
         matches = tournament.round_instances[state.current_round].matches
-        for index, match in enumerate(matches):
-            index += 1
-
-            player1 = match.player1.first_name
-            player2 = match.player2.first_name
-
-            # Colorizing
-            warn = lambda text: self.colorize("warning", text)
-            info = lambda text: self.colorize("info", text)
-            success = lambda text: self.colorize("success", text)
-            neutral = lambda text: self.colorize("neutral", text)
-
-            # right_side = f"{success('ONGOING')}"
-            # left_side = f"{neutral(player1)} vs {player2}"
-            # match_id = str(index).center(2, " ")
-
-            # if match.winner:
-            #     winner = match.winner
-            #     right_side = f"{warn('WINNER') if type(winner) == dict else info('TIE')}"
-
-            #     if winner == player1:
-            #         left_side = f"{warn(player1)} vs {player2}"
-            #     else:
-            #         left_side = f"{player1} vs {warn(player2)}"
-
-            # left_side = f"[{match_id}] --- {left_side}"
-
-            # left_side = left_side.ljust(space + 9, " ")
-            # right_side = right_side.rjust(space + 9, " ")
-
-            # self.add_body(f"{left_side}{right_side}")
 
         for index, match in enumerate(matches):
             match: other.Match
@@ -110,9 +79,8 @@ class View(BaseView):
             self.add_body(self.center_item("Note", "-"))
             self.add_body(" ")
 
-            command = self.colorize("success", f"tournament start {tournament.id}")
+            command = self.colorize("success", f"start {tournament.id}")
             self.add_body(f"---> To run the tournament type: {command}")
-            self.render_view()
 
         self.render_view()
 
@@ -127,6 +95,29 @@ class View(BaseView):
             self.add_body(" ")
 
         self.render_view()
+
+    def render_report(self, players: other.Player, sort_by="points"):
+        self.reset_values()
+
+        self.set_title("Leaderboard sorted by :")
+
+        players: list = sorted([database.Player.to_dict(x) for x in players], key=lambda k: k[sort_by])
+        header: list = vars(other.Player()).keys()
+
+        header_size = len(header)
+        self.fluidify_table(header_size)
+        self.center_cols_items(header_size)
+
+        self.text_table.add_row(header)
+
+        for player in players:
+            self.text_table.add_row(player.values())
+
+        table = self.text_table.draw()
+        table = self.center_table(table)
+
+        self.add_body(table)
+        self.render_view(wait=True)
 
     def tournament_quit(self):
         self.set_title("Main Application")

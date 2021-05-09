@@ -5,7 +5,7 @@ from app.utilities import typings, errors
 class Command(BaseCommand):
     name = "findby"
     usage = "player findby <key> <value>"
-    description = "Find a player by a key"
+    description = "Find a player by a key, omitting the key will return all the created players."
 
     def run(self, context: typings.Context, args: list):
         player_model = context["models"]["Player"]

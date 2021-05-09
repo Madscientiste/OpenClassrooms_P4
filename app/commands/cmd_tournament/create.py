@@ -11,7 +11,7 @@ from app.utilities import typings, errors, validators
 class Command(BaseCommand):
     name = "create"
     usage = "tournament create"
-    description = "Create a new tournament, omitting the key will return all the created players."
+    description = "Create a new tournament"
 
     def _generate_fake(self, field):
         """Generate Fake data using a given type"""

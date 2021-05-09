@@ -163,6 +163,8 @@ class BaseView:
     def render_view(self, wait=False):
         self.clear_screen()
 
+        self.footer = "Press enter to continue" if wait else self.footer
+
         print(self.center_item(self.title, char=self.SEPARATOR_TOP))
         print()
         print("\n".join(self.body))

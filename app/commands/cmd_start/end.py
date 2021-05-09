@@ -20,3 +20,8 @@ class Command(BaseCommand):
             round.end_round()
 
         tournament.state.is_ongoing = False
+
+        raise errors.GenericError(
+            "Tournament has been marked as finished, you can now quit the tournament mode",
+            title="Note",
+        )
