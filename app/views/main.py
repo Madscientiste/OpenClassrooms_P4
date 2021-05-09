@@ -4,7 +4,7 @@ from .base import BaseView
 class View(BaseView):
     """MainView"""
 
-    def render_main_page(self, commands: list, tournaments: list, states: list):
+    def render_main_page(self, commands: list, tournaments: list):
         self.set_title("Main Application")
 
         self.add_body("Ongoing Tournaments")
@@ -13,9 +13,8 @@ class View(BaseView):
 
         for index, tournament in enumerate(tournaments):
             index += 1
-            state = [x for x in states if x.id == tournament.id].pop(0)
 
-            if not state.is_ongoing:
+            if not tournament.state.is_ongoing:
                 continue
 
             self.add_body(f"=====> Tournament {index} of {len(tournaments)}")

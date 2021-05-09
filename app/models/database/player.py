@@ -8,13 +8,13 @@ class Player(BaseDB):
 
     def __init__(
         self,
-        first_name: str = None,
-        last_name: str = None,
-        birthday: str = None,
-        sexe: str = None,
-        rank: int = None,
-        doc_id: int = None,
-        id: int = None,
+        first_name=str(),
+        last_name=str(),
+        birthday=str(),
+        sexe=str(),
+        rank=int(),
+        doc_id=int(),
+        id=int(),
     ):
         self.id = doc_id or id
         self.first_name = first_name

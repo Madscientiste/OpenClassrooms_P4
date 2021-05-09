@@ -9,22 +9,21 @@ from app.models import database as dbModel, other
 
 class Tournament(BaseDB):
     database = TinyDB(STORAGE_PATH / "tournaments.json")
-    resolvables = {"players": other.Player, "round_instances": other.Round}
-
-    fields = ["name", "location", "date", "rounds", "time_control"]
+    resolvables = {"players": other.Player, "round_instances": other.Round, "state": other.State}
 
     def __init__(
         self,
-        name=None,
-        location=None,
-        date=None,
+        name=str(),
+        location=str(),
+        date=str(),
         rounds=4,
         players=[],
-        time_control=None,
-        desc=None,
-        doc_id=None,
-        id=None,
+        time_control=str(),
+        desc=str(),
+        doc_id=int(),
+        id=int(),
         round_instances=[],
+        state=other.State(),
     ):
         self.id: int = doc_id or id
         self.name: str = name
@@ -35,13 +34,13 @@ class Tournament(BaseDB):
         self.players: list[dbModel.Player] = players
         self.time_control: str = time_control
         self.desc: str = desc
+        self.state: other.State = state
 
-    def generate_round(self, state: dbModel.State) -> other.Round:
+    def generate_round(self) -> other.Round:
         """Generate a round"""
         assert len(self.players) % 2 == 0, "Players not equal"
 
         players = sorted(self.players, key=lambda player: int(player.rank), reverse=True)
-        players = deepcopy(players)
 
         if len(self.round_instances) < 1:
             round = other.Round()
@@ -67,7 +66,7 @@ class Tournament(BaseDB):
 
             locked_ids = []
 
-            previous_round = self.round_instances[state.current_round - 1]
+            previous_round = self.round_instances[self.state.current_round - 1]
             previous_players = previous_round.get_players()
 
             sortby_id = lambda _interable: sorted(_interable, key=lambda x: x.id)

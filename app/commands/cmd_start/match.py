@@ -8,8 +8,8 @@ class Command(BaseCommand):
     usage = "match <match_id>"
     description = "Select a match to update the score"
 
-    def run(self, context: typings.Context, tournament: database.Tournament, args: list, state):
-        round: other.Round = tournament.round_instances[state.current_round]
+    def run(self, context: typings.Context, tournament: database.Tournament, args: list):
+        round: other.Round = tournament.round_instances[tournament.state.current_round]
         tournament_view = context["views"]["tournament"]
 
         match_id = self.pop_arg(args)

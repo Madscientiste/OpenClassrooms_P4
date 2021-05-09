@@ -1,5 +1,4 @@
 from app.commands.base import BaseCommand
-from app.utilities import typings
 from app.models import database
 
 
@@ -8,9 +7,6 @@ class Command(BaseCommand):
     usage = "previous"
     description = "Go to the previous round"
 
-    def run(self, context: typings.Context, tournament: database.Tournament, args: list, state: database.State):
-        if state.current_round == 0:
-            return
-
-        state.current_round -= 1
-        state.save()
+    def run(self, tournament: database.Tournament, *args, **kwargs):
+        if tournament.state.current_round > 0:
+            tournament.state.current_round -= 1

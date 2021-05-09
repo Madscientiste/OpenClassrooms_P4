@@ -44,6 +44,9 @@ class BaseView:
 
     def show_tournament(self, tournament: database.Tournament):
         for key, value in tournament.to_dict().items():
+            if key == "state":
+                continue
+
             if key == "round_instances":
                 self.add_body(f"-- {key} : ")
 
@@ -93,6 +96,7 @@ class BaseView:
         colors["success"] = "\033[92m"
         colors["warning"] = "\033[93m"
         colors["info"] = "\033[94m"
+        colors["neutral"] = "\033[0m"
 
         return colors[color_name] + text + "\033[0m"
 

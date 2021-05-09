@@ -1,48 +1,17 @@
-import re
 import random
+from datetime import datetime
 
 from InquirerPy.inquirer import text, select
-from prompt_toolkit.validation import Validator, ValidationError
 from faker import Faker
 
-from datetime import datetime
 from app.commands.base import BaseCommand
-from app.utilities import typings, errors
+from app.utilities import typings, errors, validators
 
 
 class Command(BaseCommand):
     name = "create"
     usage = "player create"
     description = "Create a new player"
-
-    # Error Handling
-
-    class DateValidator(Validator):
-        def validate(self, document):
-            try:
-                datetime.strptime(document.text, "%d/%m/%Y")
-            # flake8: noqa
-            except:
-                raise ValidationError(
-                    message="Date is in the wrong format, it should be : DD/MM/YYYY",
-                    cursor_position=document.cursor_position,
-                )
-
-    class TextValidator(Validator):
-        def validate(self, document):
-            if re.search(r"\d", document.text):
-                raise ValidationError(
-                    message="This input contains numeric characters",
-                    cursor_position=document.cursor_position,
-                )
-
-    class DigitValidator(Validator):
-        def validate(self, document):
-            if not document.text.isdigit():
-                raise ValidationError(
-                    message="Only numbers are allowed",
-                    cursor_position=document.cursor_position,
-                )
 
     def _generate_fake(self, field, all=False) -> str:
         """Generate Fake data using a given type"""
@@ -78,25 +47,25 @@ class Command(BaseCommand):
         player_model = context["models"]["Player"]
         player_view = context["views"]["player"]
 
-        rand_count = self.pop_arg(args)
-        if rand_count.isdigit():
-            total_created = self.create_multiples(rand_count, player_model)
+        player_count = self.pop_arg(args)
+        if player_count and player_count.isdigit():
+            total_created = self.create_multiples(player_count, player_model)
             return player_view.render_multiples(total_created, title="Created Players")
 
         questions = {
             "first_name": text(
                 message="Enter the first name of the player:",
-                validate=self.TextValidator(),
+                validate=validators.TextValidator(),
                 default=f'{self._generate_fake("first_name")}',
             ),
             "last_name": text(
                 message="Enter the last name of the player:",
-                validate=self.TextValidator(),
+                validate=validators.TextValidator(),
                 default=f'{self._generate_fake("last_name")}',
             ),
             "birthday": text(
                 message="Enter the birthday of the player:",
-                validate=self.DateValidator(),
+                validate=validators.DateValidator(),
                 default=f'{self._generate_fake("birthday")}',
             ),
             "sexe": select(
@@ -106,7 +75,7 @@ class Command(BaseCommand):
             ),
             "rank": text(
                 message="Enter the rank of the player:",
-                validate=self.DigitValidator(),
+                validate=validators.DigitValidator(),
                 default=f'{self._generate_fake("rank")}',
             ),
         }
@@ -114,12 +83,11 @@ class Command(BaseCommand):
         result = {}
 
         for key, value in questions.items():
-            response = value.execute()
-
-            if not response:
-                raise errors.GenericError("Misconstructed input")
-
-            result[key] = response
+            sanitize_value = type(getattr(player_model(), key))
+            try:
+                result[key] = sanitize_value(value.execute())
+            except KeyboardInterrupt:
+                raise errors.GenericError("Canceld the creation of the player", title="Note")
 
         new_player = player_model(**result)
         new_player = new_player.save()

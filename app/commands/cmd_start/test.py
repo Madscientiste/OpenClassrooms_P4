@@ -1,8 +1,6 @@
-from app.models.database import player
 # flake8: noqa
 
 from app.commands.base import BaseCommand
-from app.utilities import typings
 from app.models import database
 
 
@@ -12,7 +10,7 @@ class Command(BaseCommand):
     description = "Ayaya"
     is_hidden = True
 
-    def run(self, context: typings.Context, tournament: database.Tournament, args: list, state: database.State):
+    def run(self, tournament: database.Tournament, *args, **kwargs):
         sortby_id = lambda _interable: sorted(_interable, key=lambda x: x.id)
         base_players = sortby_id(tournament.players)
 

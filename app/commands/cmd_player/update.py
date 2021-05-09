@@ -5,7 +5,7 @@ from app.utilities import typings, errors
 class Command(BaseCommand):
     name = "update"
     usage = "player update <player_id> <key> <value>"
-    description = "Find a player by a key"
+    description = "Update a player's info"
 
     def run(self, context: typings.Context, args: list):
         player_model = context["models"]["Player"]
@@ -27,7 +27,9 @@ class Command(BaseCommand):
             raise errors.GenericError("Missing value")
 
         player = player_model.find_one(player_id)
+
         sanitize_type = type(getattr(player, key))
+
         setattr(player, key, sanitize_type(value))
         player = player.save()
 

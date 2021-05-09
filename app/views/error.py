@@ -62,12 +62,6 @@ class View(BaseView):
         self.add_body("")
         self.add_body(self.center_item(f"- List of available commands{with_parent}-", "-"))
         self.add_body(" ")
-
-        for command in commands:
-            for field in ["name", "usage", "description"]:
-                self.add_body(f"-- {field} : {command.__getattribute__(field)}")
-
-            self.add_body("-" * 50)
-            self.add_body(" ")
+        self.show_commands(commands)
 
         self.render_view(wait=True)

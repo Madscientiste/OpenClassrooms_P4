@@ -1,5 +1,5 @@
 from app.commands.base import BaseCommand
-from app.utilities import typings, errors
+from app.utilities import errors
 from app.models import database
 
 
@@ -10,8 +10,8 @@ class Command(BaseCommand):
     # Hide it, because they 'could' can end the tournament while they shouldn't
     is_hidden = True
 
-    def run(self, context: typings.Context, tournament: database.Tournament, args: list, state: database.State):
-        round = tournament.round_instances[state.current_round]
+    def run(self, tournament: database.Tournament, *args, **kwargs):
+        round = tournament.round_instances[tournament.state.current_round]
 
         if None in [x.winner for x in round.matches]:
             raise errors.GenericError("Cannot end the tournament, match not completed")
@@ -19,5 +19,4 @@ class Command(BaseCommand):
         if not round.end_date:
             round.end_round()
 
-        state.is_ongoing = False
-        state.save()
+        tournament.state.is_ongoing = False

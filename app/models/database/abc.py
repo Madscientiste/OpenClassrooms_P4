@@ -11,7 +11,7 @@ class BaseDB:
     database: TinyDB
     resolvables: dict
 
-    def save(self, doc_id=None):
+    def save(self):
         """Create a new item or update the current one"""
         dictified: dict = self.to_dict()
         item_id: int = dictified["id"] or None
@@ -21,8 +21,7 @@ class BaseDB:
             self.id = self.database.update(dictified, doc_ids=[item_id]).pop(0)
         else:
             del dictified["id"]
-            insert = table.Document(dictified, doc_id) if doc_id else dictified
-            self.id = self.database.insert(insert)
+            self.id = self.database.insert(dictified)
 
         return self.resolve(self.to_dict())
 
@@ -81,17 +80,17 @@ class BaseDB:
         if not key or not value:
             return [cls.resolve(x) for x in cls.database.all()]
 
-        query = Query()
-        key = getattr(query, key)
+        query = getattr(Query(), key)
+        key_type = type(getattr(cls(), key))
 
         search_criteria = key == value
 
-        if key in ["first_name", "last_name", "birthday"]:
-            search_criteria = key.matches(value, re.IGNORECASE)
-        if key in ["id", "doc_id", "rank"]:
-            if not value.isdigit():
+        if key_type == str:
+            search_criteria = query.matches(value, re.IGNORECASE)
+        if key_type == int:
+            if value.isdigit():
+                search_criteria = query == int(value)
+            else:
                 raise errors.GenericError(f"value must be a number")
-
-            search_criteria = key == int(value)
 
         return [cls.resolve(x) for x in cls.database.search(search_criteria)]

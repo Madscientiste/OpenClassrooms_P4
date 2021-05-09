@@ -1,5 +1,5 @@
 from app.commands.base import BaseCommand
-from app.utilities import typings, errors
+from app.utilities import errors
 from app.models import database
 
 
@@ -8,11 +8,11 @@ class Command(BaseCommand):
     usage = "next"
     description = "Go to the next round"
 
-    def run(self, context: typings.Context, tournament: database.Tournament, args: list, state: database.State):
-        if tournament.rounds == state.current_round + 1:
+    def run(self, tournament: database.Tournament, *args, **kwargs):
+        if tournament.rounds == tournament.state.current_round + 1:
             return
 
-        round = tournament.round_instances[state.current_round]
+        round = tournament.round_instances[tournament.state.current_round]
 
         # Can't go to the next round if the matches aren't completed
         if None in [x.winner for x in round.matches]:
@@ -21,5 +21,4 @@ class Command(BaseCommand):
         if not round.end_date:
             round.end_round()
 
-        state.current_round += 1
-        state.save()
+        tournament.state.current_round += 1
