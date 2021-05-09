@@ -1,4 +1,3 @@
-
 import re
 from pathlib import Path
 from tinydb import TinyDB, Query, table
@@ -68,18 +67,13 @@ class BaseDB:
 
         if not id:
             raise errors.GenericError(f"Missing {instance_name}_id")
-
-        if not id.isdigit():
+        elif not id.isdigit():
             raise errors.GenericError(f"{instance_name}_id must be a number")
 
         id = int(id)
-
         has_id: bool = cls.database.contains(doc_id=id)
 
-        if not has_id:
-            return has_id
-
-        return cls.resolve(cls.database.get(doc_id=id))
+        return cls.resolve(cls.database.get(doc_id=id)) if has_id else has_id
 
     @classmethod
     def find_many(cls, key=None, value=None):
@@ -92,7 +86,12 @@ class BaseDB:
 
         search_criteria = key == value
 
-        if key in ["first_name", "last_name"]:
+        if key in ["first_name", "last_name", "birthday"]:
             search_criteria = key.matches(value, re.IGNORECASE)
+        if key in ["id", "doc_id", "rank"]:
+            if not value.isdigit():
+                raise errors.GenericError(f"value must be a number")
+
+            search_criteria = key == int(value)
 
         return [cls.resolve(x) for x in cls.database.search(search_criteria)]

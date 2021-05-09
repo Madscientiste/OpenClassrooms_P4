@@ -64,7 +64,7 @@ class Command(BaseCommand):
         tournament = tournament_model.find_one(tournament_id)
 
         if not tournament:
-            raise errors.GenericError(f"The id [{id}] wasn't found in database")
+            raise errors.GenericError(f"Tournament with the id [{tournament_id}] doesn't exist")
 
         state = database.State.find_one(tournament_id)
 

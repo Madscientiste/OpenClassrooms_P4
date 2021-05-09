@@ -69,9 +69,9 @@ class Command(BaseCommand):
             new_player = player_model(**fake_player)
             new_player = new_player.save()
             total_created.append(new_player)
-        
+
         return total_created
-        
+
     # Running the command
 
     def run(self, context: typings.Context, args: list):

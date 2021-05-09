@@ -27,7 +27,8 @@ class Command(BaseCommand):
             raise errors.GenericError("Missing value")
 
         player = player_model.find_one(player_id)
-        setattr(player, key, value)
+        sanitize_type = type(getattr(player, key))
+        setattr(player, key, sanitize_type(value))
         player = player.save()
 
         player_view.render_single(player, title="Updated Players")
