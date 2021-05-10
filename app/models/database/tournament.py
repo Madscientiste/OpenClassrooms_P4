@@ -38,12 +38,12 @@ class Tournament(BaseDB):
 
     def generate_round(self) -> other.Round:
         """Generate a round"""
-        assert len(self.players) % 2 == 0, "Players not equal"
+        assert len(self.players) % 2 == 0, "No more room to generate a round"
 
         if len(self.round_instances) < 1:
             players = deepcopy(sorted(self.players, key=lambda player: int(player.rank), reverse=True))
 
-            round = other.Round()
+            new_round = other.Round()
 
             length = len(players)
             middle_index = length // 2
@@ -51,22 +51,23 @@ class Tournament(BaseDB):
             superieur = players[:middle_index]
             inferieur = players[middle_index:]
 
-            for player1, player2 in zip(superieur, inferieur):
-                player1: other.Player
-                player2: other.Player
+            for index in range(len(superieur)):
+                # for player1, player2 in zip(superieur, inferieur):
+                player1: other.Player = superieur[index]
+                player2: other.Player = inferieur[index]
 
-                player1.history.append(player2.id)
-                player2.history.append(player1.id)
-                
-                round.add_match(other.Match(player1, player2))
+                player1.history = player1.history + [player2.id]
+                player2.history = player2.history + [player1.id]
 
-            return round
+                new_round.add_match(other.Match(player1, player2))
+
+            return new_round
         else:
             previous_round = self.round_instances[self.state.current_round - 1]
-            previous_players = previous_round.get_players()
+            previous_players = deepcopy(previous_round.get_players())
             players = sorted(previous_players, key=lambda player: int(player.rank), reverse=True)
 
-            round = other.Round()
+            new_round = other.Round()
 
             locked_ids = []
 
@@ -105,7 +106,7 @@ class Tournament(BaseDB):
                     player.points = 0
                     opponent.points = 0
 
-                    round.add_match(other.Match(player, opponent))
+                    new_round.add_match(other.Match(player, opponent))
                     break
 
-            return round
+            return new_round
