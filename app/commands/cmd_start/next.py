@@ -22,3 +22,9 @@ class Command(BaseCommand):
             round.end_round()
 
         tournament.state.current_round += 1
+
+        # Testing if we can generate a new round
+        if not len(tournament.generate_round().get_players()):
+            tournament.state.is_ongoing = False
+            tournament.state.current_round -= 1
+            raise errors.GenericError("Cannot generate a new round, tournament has been marked as closed")

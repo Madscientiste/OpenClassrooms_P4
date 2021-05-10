@@ -19,7 +19,10 @@ class Command(BaseCommand):
         if not match_id.isdigit():
             raise errors.GenericError("<Match ID> must be a number")
 
-        match = round.get_match(int(match_id) - 1)
+        try:
+            match = round.get_match(int(match_id) - 1)
+        except IndexError:
+            raise errors.GenericError("Match ID doesn't exist")
 
         while True:
             tournament_view.render_match(match)

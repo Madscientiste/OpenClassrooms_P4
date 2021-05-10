@@ -7,8 +7,7 @@ class Command(BaseCommand):
     name = "end"
     usage = "end"
     description = "End the tournament and update the players's rank"
-    # Hide it, because they 'could' can end the tournament while they shouldn't
-    is_hidden = True
+    is_disabled = True
 
     def run(self, tournament: database.Tournament, *args, **kwargs):
         round = tournament.round_instances[tournament.state.current_round]

@@ -45,7 +45,7 @@ class Command(BaseCommand):
             self.commands.cache["previous"].is_disabled = False
         if curr_round == tournament.rounds:
             self.commands.cache["next"].is_disabled = True
-            self.commands.cache["end"].is_hidden = False
+            self.commands.cache["end"].is_disabled = False
         if curr_round < tournament.rounds:
             self.commands.cache["next"].is_disabled = False
 

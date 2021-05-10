@@ -11,10 +11,10 @@ today = lambda: datetime.today().strftime("%d/%m/%Y %H:%M:%S")
 class Round(BaseModel):
     resolvables = {"matches": Match}
 
-    def __init__(self, matches: list[Match] = [], start_date: str = today(), end_date: str = None) -> None:
-        self.matches = matches
+    def __init__(self, matches: list[Match] = None, start_date: str = None, end_date: str = None) -> None:
+        self.matches = matches or []
 
-        self.start_date = start_date  # 01/01/2001 15:00:00
+        self.start_date = start_date or today()  # 01/01/2001 15:00:00
         self.end_date = end_date
 
     def get_players(self):

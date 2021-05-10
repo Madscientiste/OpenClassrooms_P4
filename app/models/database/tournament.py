@@ -22,28 +22,28 @@ class Tournament(BaseDB):
         desc=str(),
         doc_id=int(),
         id=int(),
-        round_instances=[],
-        state=other.State(),
+        round_instances=None,
+        state=None,
     ):
         self.id: int = doc_id or id
         self.name: str = name
         self.location: str = location
         self.date: str = date
         self.rounds: int = rounds
-        self.round_instances: list[other.Round] = round_instances
+        self.round_instances: list[other.Round] = round_instances or []
         self.players: list[dbModel.Player] = players
         self.time_control: str = time_control
         self.desc: str = desc
-        self.state: other.State = state
+        self.state: other.State = state or other.State()
 
     def generate_round(self) -> other.Round:
         """Generate a round"""
         assert len(self.players) % 2 == 0, "No more room to generate a round"
 
+        new_round = other.Round()
+
         if len(self.round_instances) < 1:
             players = deepcopy(sorted(self.players, key=lambda player: int(player.rank), reverse=True))
-
-            new_round = other.Round()
 
             length = len(players)
             middle_index = length // 2
@@ -51,13 +51,12 @@ class Tournament(BaseDB):
             superieur = players[:middle_index]
             inferieur = players[middle_index:]
 
-            for index in range(len(superieur)):
-                # for player1, player2 in zip(superieur, inferieur):
-                player1: other.Player = superieur[index]
-                player2: other.Player = inferieur[index]
+            for player1, player2 in zip(superieur, inferieur):
+                player1: other.Player
+                player2: other.Player
 
-                player1.history = player1.history + [player2.id]
-                player2.history = player2.history + [player1.id]
+                player1.history.append(player2.id)
+                player2.history.append(player1.id)
 
                 new_round.add_match(other.Match(player1, player2))
 
@@ -67,25 +66,7 @@ class Tournament(BaseDB):
             previous_players = deepcopy(previous_round.get_players())
             players = sorted(previous_players, key=lambda player: int(player.rank), reverse=True)
 
-            new_round = other.Round()
-
             locked_ids = []
-
-            # sortby_id = lambda _interable: sorted(_interable, key=lambda x: x.id)
-
-            # # Ensuring they are matching
-            # self.players = sortby_id(self.players)
-            # previous_players = sortby_id(previous_players)
-
-            # #: Sorting the self.players based on the previous round's players's points
-            # players = [
-            #     x
-            #     for x, _ in sorted(
-            #         zip(self.players, previous_players),
-            #         key=lambda player: (float(player[1].points), int(player[1].rank)),
-            #         reverse=True,
-            #     )
-            # ]
 
             for player in players:
                 player: other.Player

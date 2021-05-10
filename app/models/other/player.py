@@ -10,7 +10,7 @@ class Player(BaseModel):
         last_name: str = None,
         birthday: str = None,
         points: float = 0,
-        history: list = [],
+        history: list = None,
         sexe: str = None,
         rank: int = None,
         id: int = None,
@@ -22,4 +22,4 @@ class Player(BaseModel):
         self.sexe = sexe
         self.rank = rank
         self.points = points
-        self.history = history
+        self.history = history or []
