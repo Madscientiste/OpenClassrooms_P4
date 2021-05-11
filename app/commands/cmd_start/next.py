@@ -9,7 +9,7 @@ class Command(BaseCommand):
     description = "Go to the next round"
 
     def run(self, tournament: database.Tournament, *args, **kwargs):
-        if tournament.rounds == tournament.state.current_round + 1:
+        if tournament.state.current_round + 1 == tournament.rounds:
             return
 
         round = tournament.round_instances[tournament.state.current_round]
@@ -27,4 +27,4 @@ class Command(BaseCommand):
         if not len(tournament.generate_round().get_players()):
             tournament.state.is_ongoing = False
             tournament.state.current_round -= 1
-            raise errors.GenericError("Cannot generate a new round, tournament has been marked as closed")
+            raise errors.GenericError("Cannot generate a new round, everyone played agaist each other !")

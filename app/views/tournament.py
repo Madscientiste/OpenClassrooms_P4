@@ -112,10 +112,7 @@ class View(BaseView):
         self.text_table.add_row(header)
 
         for player in players:
-            values = list(player.values())
-            values.pop()
-
-            self.text_table.add_row(values)
+            self.text_table.add_row([player[key] for key in header])
 
         table = self.text_table.draw()
         table = self.center_table(table)

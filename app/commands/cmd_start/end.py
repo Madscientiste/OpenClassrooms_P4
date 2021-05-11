@@ -10,10 +10,13 @@ class Command(BaseCommand):
     is_disabled = True
 
     def run(self, tournament: database.Tournament, *args, **kwargs):
+        if not tournament.state.is_ongoing:
+            raise errors.GenericError("Tournament is already marked as done")
+
         round = tournament.round_instances[tournament.state.current_round]
 
         if None in [x.winner for x in round.matches]:
-            raise errors.GenericError("Cannot end the tournament, match not completed")
+            raise errors.GenericError("Cannot end the tournament, some matches are not completed")
 
         if not round.end_date:
             round.end_round()

@@ -8,7 +8,7 @@ from app.utilities import typings
 
 class Command(BaseCommand):
     name = "report"
-    usage = "report <sort key>"
+    usage = "report <sort_key>"
     description = "Show the report of the current Tournament"
 
     def run(self, tournament: database.Tournament, context: typings.Context, args: list):
