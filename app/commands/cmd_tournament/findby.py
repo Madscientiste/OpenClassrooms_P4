@@ -17,6 +17,9 @@ class Command(BaseCommand):
         if key and not value:
             raise errors.GenericError(f"Missing value for {key}")
 
+        if key and key not in vars(tournament_model()):
+            raise errors.GenericError(f"The key <{key}> doesn't exist in tournament")
+
         found_tournaments = tournament_model.find_many(key, value)
 
         if not found_tournaments:

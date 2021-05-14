@@ -70,7 +70,7 @@ class Command(BaseCommand):
             ),
             "sexe": select(
                 message="Enter the sexe of the player:",
-                choices=["male", "female"],
+                choices=["Male", "Female"],
                 default=f'{self._generate_fake("sexe")}',
             ),
             "rank": text(

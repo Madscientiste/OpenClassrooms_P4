@@ -8,20 +8,20 @@ class Player(BaseDB):
 
     def __init__(
         self,
-        first_name=str(),
-        last_name=str(),
-        birthday=str(),
-        sexe=str(),
-        rank=int(),
-        doc_id=int(),
-        id=int(),
+        first_name=None,
+        last_name=None,
+        birthday=None,
+        sexe=None,
+        rank=None,
+        doc_id=None,
+        id=None,
     ):
-        self.id = doc_id or id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.birthday = birthday
-        self.sexe = sexe
-        self.rank = rank
+        self.id = doc_id or id or int()
+        self.first_name = first_name or str()
+        self.last_name = last_name or str()
+        self.birthday = birthday or str()
+        self.sexe = sexe or str()
+        self.rank = rank or int()
 
     @property
     def full_name(self):

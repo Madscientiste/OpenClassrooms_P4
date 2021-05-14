@@ -7,7 +7,7 @@ from app.utilities import typings, errors
 class Command(BaseCommand):
     name = "start"
     usage = "start <tournament_id>"
-    description = "Start the tournament mode"
+    description = "Start or Resume the tournament mode"
 
     def __init__(self) -> None:
         self.commands = Commands(package="app.commands.cmd_start")
@@ -39,15 +39,18 @@ class Command(BaseCommand):
     def _check_commands(self, tournament):
         # Hide & unhide command based on state
         curr_round = tournament.state.current_round + 1
-        if curr_round == 1:
-            self.commands.cache["previous"].is_disabled = True
-        if curr_round > 1:
-            self.commands.cache["previous"].is_disabled = False
-        if curr_round == tournament.rounds:
-            self.commands.cache["next"].is_disabled = True
-            self.commands.cache["end"].is_disabled = False
-        if curr_round < tournament.rounds:
-            self.commands.cache["next"].is_disabled = False
+
+        disable_previous = False if curr_round > 1 else True
+        self.commands.cache["previous"].is_disabled = disable_previous
+
+        disable_next = True if curr_round == tournament.rounds else False
+        self.commands.cache["next"].is_disabled = disable_next
+
+        disable_next = True if len(tournament.round_instances) == tournament.rounds else False
+        self.commands.cache["end"].is_disabled = disable_next
+
+        enable_commit = False if tournament.state.is_ongoing else True
+        self.commands.cache["commit"].is_disabled = enable_commit
 
     def run(self, context: typings.Context, args: list):
         context = context.copy()  # i don't want to modify the 'main' context

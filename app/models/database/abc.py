@@ -83,7 +83,7 @@ class BaseDB:
         query = getattr(Query(), key)
         key_type = type(getattr(cls(), key))
 
-        search_criteria = key == value
+        search_criteria = query == value
 
         if key_type == str:
             search_criteria = query.matches(value, re.IGNORECASE)

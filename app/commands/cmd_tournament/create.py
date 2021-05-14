@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import random
 from datetime import datetime
 
@@ -36,6 +38,11 @@ class Command(BaseCommand):
 
         players = context["models"]["Player"].find_many()
 
+        has_min_players = lambda players: len(players) >= 8
+
+        if not has_min_players(players):
+            raise errors.GenericError("Cannot create a tournament without at least 8 players created !")
+
         questions = {
             "name": text(
                 message="Enter the name of the tournament:",
@@ -61,8 +68,8 @@ class Command(BaseCommand):
                 message="Select the participants:",
                 choices=[{"name": f"{p.full_name}", "value": p} for p in players],
                 instruction="> use Spacebar to select, and Enter to exit the selection",
-                validate=lambda document: len(document) % 2 == 0 and len(document),
-                invalid_message="Odd Players! remove or add a player.",
+                validate=lambda players: has_min_players(players) and len(players) % 2 == 0 and len(players),
+                invalid_message="Cannot select less than 4 players or odd players",
                 multiselect=True,
                 transformer=lambda result: "%s player%s selected" % (len(result), "s" if len(result) > 1 else ""),
             ),

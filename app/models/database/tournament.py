@@ -13,27 +13,27 @@ class Tournament(BaseDB):
 
     def __init__(
         self,
-        name=str(),
-        location=str(),
-        date=str(),
+        name=None,
+        location=None,
+        date=None,
         rounds=4,
-        players=[],
-        time_control=str(),
-        desc=str(),
-        doc_id=int(),
-        id=int(),
+        players=None,
+        time_control=None,
+        desc=None,
+        doc_id=None,
+        id=None,
         round_instances=None,
         state=None,
     ):
-        self.id: int = doc_id or id
-        self.name: str = name
-        self.location: str = location
-        self.date: str = date
-        self.rounds: int = rounds
-        self.round_instances: list[other.Round] = round_instances or []
-        self.players: list[dbModel.Player] = players
-        self.time_control: str = time_control
-        self.desc: str = desc
+        self.id: int = doc_id or id or int()
+        self.name: str = name or str()
+        self.location: str = location or str()
+        self.date: str = date or str()
+        self.rounds: int = rounds or int()
+        self.round_instances: list[other.Round] = round_instances or list()
+        self.players: list[dbModel.Player] = players or list()
+        self.time_control: str = time_control or str()
+        self.desc: str = desc or str()
         self.state: other.State = state or other.State()
 
     def generate_round(self) -> other.Round:
