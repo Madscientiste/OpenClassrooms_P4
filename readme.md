@@ -67,10 +67,13 @@ after you isntalled everything you can now run the application :
 python main.py
 ```
 
-### NOTE
+# IMPORTANT NOTES
 
-Its recommended to set size of window at 1280x800 min
+## 1 - Its recommended to set size of window at 1280x800 minimum
 
+## 2 - To get back to the main menu just press enter
+
+<br />
 <hr />
 
 ## To Generate a flake report:
