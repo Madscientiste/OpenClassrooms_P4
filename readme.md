@@ -1,8 +1,15 @@
 # Tournament Manager
 
-![madewithpython](http://ForTheBadge.com/images/badges/made-with-python.svg)
-![bugsarefeatures](https://forthebadge.com/images/badges/not-a-bug-a-feature.svg)
-![electricityisnice](http://ForTheBadge.com/images/badges/powered-by-electricity.svg)
+<p align="center"> 
+    <img 
+        src="http://ForTheBadge.com/images/badges/made-with-python.svg" 
+        width="160" 
+        >
+    <img 
+        src="https://forthebadge.com/images/badges/powered-by-pull-requests.svg" 
+        width="200" 
+        >
+</p>
 
 ## Screenshots
 
