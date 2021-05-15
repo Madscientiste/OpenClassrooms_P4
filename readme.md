@@ -29,6 +29,8 @@
     title="Main menu after quitting the tournament mode"
     >
 
+# Installation & Usage
+
 ## Activate venv
 
 ### For Windows users:
