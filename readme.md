@@ -24,7 +24,7 @@
     >
 
 <img 
-    src="https://raw.githubusercontent.com/Madscientiste/P4_openclassroom/main/screenshots/tournament_manager_2.png" 
+    src="https://raw.githubusercontent.com/Madscientiste/P4_openclassroom/main/screenshots/tournament_manager_3.png" 
     width="850" 
     title="Main menu after quitting the tournament mode"
     >
