@@ -96,12 +96,18 @@ class View(BaseView):
 
         self.render_view()
 
-    def render_report(self, players: other.Player, sort_by="points"):
+    def render_report(self, players: other.Player, sort_by="points", order="descending"):
         self.reset_values()
 
-        self.set_title(f"Leaderboard sorted by : {sort_by}")
+        self.set_title(f"Leaderboard sorted by : {sort_by} > {order}")
 
-        players: list = sorted([database.Player.to_dict(x) for x in players], key=lambda k: k[sort_by], reverse=True)
+        is_reversed = True if order == "descending" else False
+        players: list = sorted(
+            [database.Player.to_dict(x) for x in players],
+            key=lambda k: k[sort_by],
+            reverse=is_reversed,
+        )
+
         header: list = [x for x in vars(other.Player()).keys() if x not in ["history"]]
         warn = lambda text: self.colorize("warning", text)
 
@@ -110,6 +116,7 @@ class View(BaseView):
         self.center_cols_items(header_size)
 
         self.text_table.add_row(header)
+        self.text_table.set_cols_dtype(["t" for _ in header])
 
         for player in players:
             self.text_table.add_row([player[key] for key in header])

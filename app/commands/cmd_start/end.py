@@ -6,8 +6,7 @@ from app.models import database
 class Command(BaseCommand):
     name = "end"
     usage = "end"
-    description = "End the tournament and update the players's rank"
-    is_disabled = True
+    description = "Mark the tournament as ended"
 
     def run(self, tournament: database.Tournament, *args, **kwargs):
         if not tournament.state.is_ongoing:

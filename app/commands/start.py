@@ -46,10 +46,10 @@ class Command(BaseCommand):
         disable_next = True if curr_round == tournament.rounds else False
         self.commands.cache["next"].is_disabled = disable_next
 
-        disable_next = True if len(tournament.round_instances) == tournament.rounds else False
-        self.commands.cache["end"].is_disabled = disable_next
+        disable_end = False if len(tournament.round_instances) == tournament.rounds else True
+        self.commands.cache["end"].is_disabled = disable_end
 
-        enable_commit = False if tournament.state.is_ongoing else True
+        enable_commit = True if tournament.state.is_ongoing else False
         self.commands.cache["commit"].is_disabled = enable_commit
 
     def run(self, context: typings.Context, args: list):

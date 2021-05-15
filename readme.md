@@ -1,5 +1,16 @@
 # Tournament Manager
 
+![madewithpython](http://ForTheBadge.com/images/badges/made-with-python.svg)
+![bugsarefeatures](https://forthebadge.com/images/badges/not-a-bug-a-feature.svg)
+![electricityisnice](http://ForTheBadge.com/images/badges/powered-by-electricity.svg)
+
+## Screenshots
+
+![whyareyoureadingme](https://github.com/Madscientiste/P4_openclassroom/tree/main/screenshots/tournament_manager.png?raw=true)
+![whyareyoureadingme](https://github.com/Madscientiste/P4_openclassroom/tree/main/screenshots/tournament_manager1.png?raw=true)
+![whyareyoureadingme](https://github.com/Madscientiste/P4_openclassroom/tree/main/screenshots/tournament_manager2.png?raw=true)
+![whyareyoureadingme](https://github.com/Madscientiste/P4_openclassroom/tree/main/screenshots/tournament_manager3.png?raw=true)
+
 ## Activate venv
 
 ### For Windows users:

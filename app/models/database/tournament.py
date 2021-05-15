@@ -64,7 +64,7 @@ class Tournament(BaseDB):
         else:
             previous_round = self.round_instances[self.state.current_round - 1]
             previous_players = deepcopy(previous_round.get_players())
-            players = sorted(previous_players, key=lambda player: int(player.rank), reverse=True)
+            players = sorted(previous_players, key=lambda p: (float(p.points), int(p.rank)), reverse=True)
 
             locked_ids = []
 

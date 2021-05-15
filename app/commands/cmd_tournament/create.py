@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 choices=[{"name": f"{p.full_name}", "value": p} for p in players],
                 instruction="> use Spacebar to select, and Enter to exit the selection",
                 validate=lambda players: has_min_players(players) and len(players) % 2 == 0 and len(players),
-                invalid_message="Cannot select less than 4 players or odd players",
+                invalid_message="Cannot select less than 8 players OR odd players",
                 multiselect=True,
                 transformer=lambda result: "%s player%s selected" % (len(result), "s" if len(result) > 1 else ""),
             ),
