@@ -8,24 +8,24 @@
 
 <img 
     src="https://raw.githubusercontent.com/Madscientiste/P4_openclassroom/main/screenshots/tournament_manager.png" 
-    width="450" 
+    width="850" 
     title="Creating the tournament"
     >
 <img 
     src="https://raw.githubusercontent.com/Madscientiste/P4_openclassroom/main/screenshots/tournament_manager_1.png" 
-    width="450" 
+    width="850" 
     title="Tournament has been created"
     >
 
 <img 
     src="https://raw.githubusercontent.com/Madscientiste/P4_openclassroom/main/screenshots/tournament_manager_2.png" 
-    width="450" 
+    width="850" 
     title="In the tournament mode"
     >
 
 <img 
     src="https://raw.githubusercontent.com/Madscientiste/P4_openclassroom/main/screenshots/tournament_manager_2.png" 
-    width="450" 
+    width="850" 
     title="Main menu after quitting the tournament mode"
     >
 
