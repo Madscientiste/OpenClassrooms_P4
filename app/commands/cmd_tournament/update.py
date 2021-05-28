@@ -28,6 +28,9 @@ class Command(BaseCommand):
 
         tournament = tournament_model.find_one(tournament_id)
 
+        if not tournament:
+            raise errors.GenericError("Can't find tournament with the given ID")
+
         sanitize_type = type(getattr(tournament, key))
 
         setattr(tournament, key, sanitize_type(value))

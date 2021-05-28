@@ -5,7 +5,6 @@ from app.utilities import errors, typings
 from app.models import database, other
 
 
-
 class MainController:
     def __init__(self) -> None:
         self.is_running = True

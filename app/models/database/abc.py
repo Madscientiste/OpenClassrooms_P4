@@ -89,7 +89,7 @@ class BaseDB:
             search_criteria = query.matches(value, re.IGNORECASE)
         if key_type == int:
             if value.isdigit():
-                search_criteria = query == key_type(value)
+                search_criteria = query == int(value)
             else:
                 raise errors.GenericError(f"value must be a number")
 
